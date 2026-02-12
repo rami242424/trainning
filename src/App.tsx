@@ -9,9 +9,9 @@ function App(){
     <>
       <h1>Plus Minus Reset</h1>
       <h2>{count}</h2>
-      <button>Plus</button>
-      <button>Minus</button>
-      <button>Reset</button>
+      <button onClick={onIncrease}>Plus</button>
+      <button onClick={oDecresase}>Minus</button>
+      <button onClick={onReset}>Reset</button>
     </>
   );
 }
