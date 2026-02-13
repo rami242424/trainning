@@ -2,7 +2,9 @@ import { useState } from "react";
 
 function App(){
   const [count, setCount] = useState(0);
-  const onIncrease = () => {}
+  const onIncrease = () => {
+    setCount((prev) => prev + 1);
+  }
   const oDecresase = () => {}
   const onReset = () => {}
   return (
