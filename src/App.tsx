@@ -5,7 +5,9 @@ function App(){
   const onIncrease = () => {
     setCount((prev) => prev + 1);
   }
-  const oDecresase = () => {}
+  const oDecresase = () => {
+    setCount((prev) => prev - 1);
+  }
   const onReset = () => {}
   return (
     <>
