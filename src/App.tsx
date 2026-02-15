@@ -8,7 +8,9 @@ function App(){
   const oDecresase = () => {
     setCount((prev) => prev - 1);
   }
-  const onReset = () => {}
+  const onReset = () => {
+    setCount(0);
+  }
   return (
     <>
       <h1>Plus Minus Reset</h1>
