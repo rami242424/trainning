@@ -3,7 +3,8 @@ import { useState } from "react";
 function App(){
   const [count, setCount] = useState(0);
   const onIncrease = () => {
-    setCount((prev) => prev + 1);
+    if(count >= 10){return count}
+    else setCount((prev) => prev + 1);
   }
   const oDecresase = () => {
     setCount((prev) => prev - 1);
