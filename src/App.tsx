@@ -7,7 +7,8 @@ function App(){
     else setCount((prev) => prev + 1);
   }
   const oDecresase = () => {
-    setCount((prev) => prev - 1);
+    if(count <= 0){return count}
+    else setCount((prev) => prev - 1);
   }
   const onReset = () => {
     setCount(0);
