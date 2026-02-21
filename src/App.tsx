@@ -17,8 +17,8 @@ function App(){
     <>
       <h1>Plus Minus Reset</h1>
       <h2>{count}</h2>
-      {count === 10 ? <><button disabled>Plus</button><span>Max</span></> : <button onClick={onIncrease}>Plus</button>}
-      {count === 0 ? <button disabled>Minus</button> : <button onClick={onDecresase}>Minus</button>}
+      <button onClick={onIncrease}>Plus</button>
+      <button onClick={onDecresase}>Minus</button>
       <button onClick={onReset}>Reset</button>
     </>
   );
