@@ -6,7 +6,7 @@ function App(){
     if(count >= 10){return count}
     else setCount((prev) => prev + 1);
   }
-  const oDecresase = () => {
+  const onDecresase = () => {
     if(count <= 0){return count}
     else setCount((prev) => prev - 1);
   }
@@ -18,7 +18,7 @@ function App(){
       <h1>Plus Minus Reset</h1>
       <h2>{count}</h2>
       {count === 10 ? <><button disabled>Plus</button><span>Max</span></> : <button onClick={onIncrease}>Plus</button>}
-      {count === 0 ? <button disabled>Minus</button> : <button onClick={oDecresase}>Minus</button>}
+      {count === 0 ? <button disabled>Minus</button> : <button onClick={onDecresase}>Minus</button>}
       <button onClick={onReset}>Reset</button>
     </>
   );
