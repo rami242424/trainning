@@ -3,8 +3,7 @@ import { useState } from "react";
 function App(){
   const [count, setCount] = useState(0);
   const onIncrease = () => {
-    if(count >= 10){return count}
-    else setCount((prev) => prev + 1);
+    setCount((prev) => prev + 1);
   }
   const onDecresase = () => {
     if(count <= 0){return count}
@@ -17,7 +16,7 @@ function App(){
     <>
       <h1>Plus Minus Reset</h1>
       <h2>{count}</h2>
-      <button onClick={onIncrease}>Plus</button>
+      <button onClick={onIncrease} disabled={count >= 10}>Plus</button>
       <button onClick={onDecresase}>Minus</button>
       <button onClick={onReset}>Reset</button>
     </>
