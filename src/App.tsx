@@ -16,7 +16,7 @@ function App(){
       <h1>Plus Minus Reset</h1>
       <h2>{count}</h2>
       <button onClick={onIncrease} disabled={count >= 10}>Plus</button>
-      {count >= 10 ? <span>Max!</span> : null}
+      {count >= 10 && <span>Max!</span>}
       <button onClick={onDecresase} disabled={count <= 0}>Minus</button>
       <button onClick={onReset}>Reset</button>
     </>
