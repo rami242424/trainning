@@ -7,6 +7,7 @@ function App(){
   return (
     <>
       <input onChange={inputChange}/>
+      <button>Add</button>
     </>
   );
 }
