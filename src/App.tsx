@@ -20,7 +20,7 @@ function App(){
   }
   return (
     <>
-      <input onChange={inputChange}/>
+      <input value={inputValue} onChange={inputChange}/>
       <button onClick={addClick}>Add</button>
       {items.map((item, index) => <li key={index}>{item}</li>)}
     </>
