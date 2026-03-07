@@ -14,7 +14,7 @@ function App(){
     //누르면 저장 > 리스트로 만들어지고
     //setItems(...items, inputValue);
     //더 안전한 방법
-    //setItems((prev) => [...prev, inputValue]);
+    setItems((prev) => [...prev, inputValue]);
     //인풋은 리셋되어야함
     setInputValue("");
   }
@@ -22,6 +22,7 @@ function App(){
     <>
       <input value={inputValue} onChange={inputChange}/>
       <button onClick={addClick}>Add</button>
+      <button>Delete</button>
       {items.map((item, index) => <li key={index}>{item}</li>)}
     </>
   );
