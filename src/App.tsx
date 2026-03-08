@@ -18,12 +18,21 @@ function App(){
     //인풋은 리셋되어야함
     setInputValue("");
   }
+  const deleteClick = () => {
+
+  }
   return (
     <>
       <input value={inputValue} onChange={inputChange}/>
       <button onClick={addClick}>Add</button>
-      <button>Delete</button>
-      {items.map((item, index) => <li key={index}>{item}</li>)}
+      {items.map((item, index) => (
+        <>
+          <li key={index}>
+            {item}
+            <button onClick={deleteClick}>Delete</button>
+          </li>
+        </>
+      ))}
     </>
   );
 }
