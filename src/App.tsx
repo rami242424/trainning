@@ -18,8 +18,8 @@ function App(){
     //인풋은 리셋되어야함
     setInputValue("");
   }
-  const deleteClick = () => {
-
+  const deleteClick = (index) => {
+    console.log(items[index])
   }
   return (
     <>
@@ -29,7 +29,7 @@ function App(){
         <>
           <li key={index}>
             {item}
-            <button onClick={deleteClick}>Delete</button>
+            <button onClick={() => deleteClick(index)}>Delete</button>
           </li>
         </>
       ))}
