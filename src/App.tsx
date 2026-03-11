@@ -1,63 +1,41 @@
-// import { useState } from "react";
-
-// function App(){
-//   const [inputValue, setInputValue] = useState("");
-//   //add시 저장될공간
-//   const [items, setItems] = useState([]);
-
-//   const inputChange = (e) => {
-//     //console.log(inputValue, "inputvalue1")
-//     setInputValue(e.target.value)
-//     //console.log(inputValue, "inputvalue2")
-//   }
-//   const addClick = () => {
-//     //누르면 저장 > 리스트로 만들어지고
-//     //setItems(...items, inputValue);
-//     //더 안전한 방법
-//     setItems((prev) => [...prev, inputValue]);
-//     //인풋은 리셋되어야함
-//     setInputValue("");
-//   }
-//   const deleteClick = (index) => {
-//     console.log(items[index])
-//   }
-//   return (
-//     <>
-//       <input value={inputValue} onChange={inputChange}/>
-//       <button onClick={addClick}>Add</button>
-//       {items.map((item, index) => (
-//         <>
-//           <li key={index}>
-//             {item}
-//             <button onClick={() => deleteClick(index)}>Delete</button>
-//           </li>
-//         </>
-//       ))}
-//     </>
-//   );
-// }
-
-// export default App;
-
-
 import { useState } from "react";
 
 function App(){
-    const [inputValue, setInputValue] = useState("");
-    const [lists, setLists] = useState([]);
-    const inputChange = (e) => {
-        setInputValue(e.target.value);
-    }
-    const AddBtnClick = () => {
-        setLists(prev=> [...prev, inputValue]);
-        setInputValue("");
-    }
-    return (
+  const [inputValue, setInputValue] = useState("");
+  //add시 저장될공간
+  const [items, setItems] = useState([]);
+
+  const inputChange = (e) => {
+    //console.log(inputValue, "inputvalue1")
+    setInputValue(e.target.value)
+    //console.log(inputValue, "inputvalue2")
+  }
+  const addClick = () => {
+    //누르면 저장 > 리스트로 만들어지고
+    //setItems(...items, inputValue);
+    //더 안전한 방법
+    setItems((prev) => [...prev, inputValue]);
+    //인풋은 리셋되어야함
+    setInputValue("");
+  }
+  const deleteClick = (index) => {
+    console.log(items[index])
+  }
+  return (
+    <>
+      <input value={inputValue} onChange={inputChange}/>
+      <button onClick={addClick}>Add</button>
+      {items.map((item, index) => (
         <>
-            <input value={inputValue} onChange={inputChange}/>
-            <button onClick={AddBtnClick}>Add</button>
-            {lists.map((list, index) => <li key={index}>{list}<button>X</button></li>)}
+          <li key={index}>
+            {item}
+            <button onClick={() => deleteClick(index)}>Delete</button>
+          </li>
         </>
-    );
+      ))}
+    </>
+  );
 }
+
 export default App;
+
