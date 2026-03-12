@@ -17,7 +17,7 @@ function App(){
     setInputValue("");
   }
   const deleteBtn = (id:number) => {
-    setItems(items.filter((item, i) => i !== id));
+    setItems(items.filter((item) => item.id !== id));
   }
   return(
     <>
