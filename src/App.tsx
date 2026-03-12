@@ -7,7 +7,7 @@ function App(){
     setInputValue(e.target.value);
   }
   const addBtnClick = () => {
-    if(inputValue.trim()) return;
+    if(!inputValue.trim()) return;
     setItems((prev) => [...prev, inputValue]);
     setInputValue("");
   }
