@@ -7,7 +7,7 @@ interface ItemType {
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<ItemType[]>([]);
-  const inputChange = (e) => {
+  const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
   const addBtnClick = () => {
