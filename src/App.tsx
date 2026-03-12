@@ -16,17 +16,17 @@ function App(){
     setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
     setInputValue("");
   }
-  const deleteBtn = (index) => {
-    setItems(items.filter((item, i) => i !== index));
+  const deleteBtn = (id:number) => {
+    setItems(items.filter((item, i) => i !== id));
   }
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
       <button onClick={addBtnClick}>Add</button>
-      {items.map((item, index) => (
-        <li key={index}>
-          {item}
-          <button onClick={() => deleteBtn(index)}>✖️</button>
+      {items.map((item, id) => (
+        <li key={id}>
+          {item.text}
+          <button onClick={() => deleteBtn(id)}>✖️</button>
         </li>
         ))}
     </>
