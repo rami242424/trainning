@@ -23,10 +23,10 @@ function App(){
     <>
       <input value={inputValue} onChange={inputChange}/>
       <button onClick={addBtnClick}>Add</button>
-      {items.map((item, id) => (
-        <li key={id}>
+      {items.map((item) => (
+        <li key={item.id}>
           {item.text}
-          <button onClick={() => deleteBtn(id)}>✖️</button>
+          <button onClick={() => deleteBtn(item.id)}>✖️</button>
         </li>
         ))}
     </>
