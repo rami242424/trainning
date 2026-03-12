@@ -2,24 +2,25 @@ import { useState } from "react";
 
 function App(){
   const [inputValue, setInputValue] = useState("");
-  //add시 저장될공간
   const [items, setItems] = useState<string[]>([]);
-
   const inputChange = (e) => {
-    //console.log(inputValue, "inputvalue1")
     setInputValue(e.target.value)
-    //console.log(inputValue, "inputvalue2")
   }
   const addClick = () => {
-    //누르면 저장 > 리스트로 만들어지고
-    //setItems(...items, inputValue);
-    //더 안전한 방법
     setItems((prev) => [...prev, inputValue]);
-    //인풋은 리셋되어야함
     setInputValue("");
   }
   const deleteClick = (index) => {
-    console.log(items[index])
+    // 클릭한 버튼의 인덱스 === 필터안에 조건이 다르면(false) 삭제됨
+    // 클릭한 버튼의 인덱스가 1이라면
+    //setItems(items.filter((item, index) => !클릭한인덱스 === index));
+    // console.log(index, "인덱스");
+    //setItems((prev)) => [...prev, items.filter((item, i) => !index == i)]
+    //setItems(items.filter((item, i) => !i == index));
+    //console.log((items.filter((item, i) => !i == index)), "무슨값이지")
+    // console.log(items.filter((item, i) => index == !item[i]))
+    setItems(items.filter((item, i) => i !== index));
+
   }
   return (
     <>
@@ -29,7 +30,7 @@ function App(){
         <>
           <li key={index}>
             {item}
-            <button onClick={() => deleteClick(index)}>Delete</button>
+            <button onClick={() => deleteClick(index)}>✖️</button>
           </li>
         </>
       ))}
