@@ -2,7 +2,7 @@ import { useState } from "react";
 
 function App(){
     const [value, setValue] = useState("");
-    const [lists, setLists] = useState([]);
+    const [lists, setLists] = useState<string[]>([]);
     const onChange = (e) => {
         setValue(e.target.value);
     }

@@ -3,7 +3,7 @@ import { useState } from "react";
 function App(){
   const [inputValue, setInputValue] = useState("");
   //add시 저장될공간
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<string[]>([]);
 
   const inputChange = (e) => {
     //console.log(inputValue, "inputvalue1")
