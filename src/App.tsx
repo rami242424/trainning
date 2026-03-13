@@ -13,8 +13,15 @@ function App(){
   }
   const addBtnClick = () => {
     if(!inputValue.trim()) return;
-    // setItems((prev) => [...prev, inputValue]);
+    // 수정
+    if(edictingId !== null) {
+      setItems((prev) => prev.map((item) => 
+        edictingId === item.id ? {...item, text: inputValue} : item
+      ))
+    } else {
+    // 추가
     setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
+    }
     setInputValue("");
   }
   const deleteBtn = (id:number) => {
