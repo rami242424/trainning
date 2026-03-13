@@ -1,14 +1,19 @@
 import { useState } from "react";
 
+interface ItemType {
+  id: number;
+  text: string;
+}
 function App(){
   const [inputValue, setInputValue] = useState("");
-  const [items, setItems] = useState<string[]>([]);
+  const [items, setItems] = useState<ItemType[]>([]);
   const inputChange = (e) => {
     setInputValue(e.target.value);
   }
   const addBtnClick = () => {
     if(!inputValue.trim()) return;
-    setItems((prev) => [...prev, inputValue]);
+    // setItems((prev) => [...prev, inputValue]);
+    setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
     setInputValue("");
   }
   const deleteBtn = (index) => {
