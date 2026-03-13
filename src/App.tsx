@@ -23,11 +23,12 @@ function App(){
   const editBtn = (item:ItemType) => {
     setEdictingId(item.id);
     setInputValue(item.text);
+    console.log(edictingId, "에딕팅아이디")
   }
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
-      <button onClick={addBtnClick}>Add</button>
+      <button onClick={addBtnClick}>{edictingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => (
         <li key={item.id}>
           {item.text}
