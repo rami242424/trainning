@@ -20,8 +20,8 @@ function App(){
   const deleteBtn = (id:number) => {
     setItems(items.filter((item) => item.id !== id));
   }
-  const editBtn = (id:number) => {
-    console.log(edictingId, "에딕팅아이디")
+  const editBtn = (item:ItemType) => {
+    console.log(item.id, "에딕팅아이디")
     
   }
   return(
@@ -32,7 +32,7 @@ function App(){
         <li key={item.id}>
           {item.text}
           <button onClick={() => deleteBtn(item.id)}>✖️</button>
-          <button onClick={() => editBtn(item.id)}>{item.id === edicting ? "editing" : "Edit"}</button>
+          <button onClick={() => editBtn(item)}>{item.id === edictingId ? "editing" : "Edit"}</button>
         </li>
         ))}
     </>
