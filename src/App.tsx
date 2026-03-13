@@ -7,6 +7,7 @@ interface ItemType {
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<ItemType[]>([]);
+  const [editing, setEditing] = useState(false);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
@@ -19,8 +20,9 @@ function App(){
   const deleteBtn = (id:number) => {
     setItems(items.filter((item) => item.id !== id));
   }
-  const editBtn = () => {
-
+  const editBtn = (id:number) => {
+    setEditing(true);
+    
   }
   return(
     <>
@@ -30,7 +32,7 @@ function App(){
         <li key={item.id}>
           {item.text}
           <button onClick={() => deleteBtn(item.id)}>✖️</button>
-          <button onClick={editBtn}>Edit</button>
+          <button onClick={() => editBtn(item.id)}>{editing ? "editing" : "Edit"}</button>
         </li>
         ))}
     </>
