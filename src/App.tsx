@@ -19,6 +19,9 @@ function App(){
   const deleteBtn = (id:number) => {
     setItems(items.filter((item) => item.id !== id));
   }
+  const editBtn = () => {
+
+  }
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
@@ -27,6 +30,7 @@ function App(){
         <li key={item.id}>
           {item.text}
           <button onClick={() => deleteBtn(item.id)}>✖️</button>
+          <button onClick={editBtn}>Edit</button>
         </li>
         ))}
     </>
