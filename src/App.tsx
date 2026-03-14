@@ -61,7 +61,7 @@ interface ItemType {
 function App(){
   const [InputValue, setInputValue] = useState("");
   const [items, setItems] = useState<ItemType[]>([]);
-  
+
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
@@ -69,10 +69,10 @@ function App(){
     setItems((prev) => [...prev, {id: Date.now(), text: InputValue}]);
     setInputValue("");
   }
-  const deleteBtn = (id:ItemType) => {
-    setItems(items.filter((item, id) => id !== item.id))
+  const deleteBtn = (id:number) => {
+    setItems(items.filter((item) => item.id !== id))
   }
-
+  
   const editBtn = (item:ItemType) => {
     setInputValue(item.text);
 
@@ -84,8 +84,8 @@ function App(){
       {items.map((item) => (
           <li key={item.id}>
             {item.text}
-            <button onClick={() => deleteBtn(item)}>delete</button>
-            <button onClick={() => editBtn(item.id)}>edit</button>
+            <button onClick={() => deleteBtn(item.id)}>delete</button>
+            <button onClick={() => editBtn(item)}>edit</button>
           </li>
         ))}
     </>
