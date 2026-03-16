@@ -1,5 +1,7 @@
 // import { useState } from "react";
 
+import { useState } from "react";
+
 
 // interface ItemType {
 //   id: number;
@@ -50,3 +52,18 @@
 
 // export default App;
 
+
+function App(){
+  const [inputValue, setInputValue] = useState("");
+  const InputChange = (e) => {
+    console.log(e.target.value)
+  }
+  return(
+    <>
+      <input onChange={InputChange} />
+      <button>Add</button>
+    </>
+  );
+}
+
+export default App;
