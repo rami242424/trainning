@@ -65,7 +65,17 @@ function App(){
     setInputValue(e.target.value)  
   }
   const addClick = () => {
-    setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
+    // 1. 빈칸인데 add 누를때
+    if(!inputValue) return;
+    if(editingId !== null) {
+      // 수정일때
+      setItems((prev) => (
+        prev.map((item) => editingId === item.id ? {id: item.id, text: inputValue} : item)
+      ))
+    } else {
+      // 
+      setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
+    }
     setInputValue("");
 
     
