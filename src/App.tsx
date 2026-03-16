@@ -55,13 +55,24 @@ import { useState } from "react";
 
 function App(){
   const [inputValue, setInputValue] = useState("");
-  const InputChange = (e) => {
-    console.log(e.target.value)
+  const [items, setItems] = useState([]);
+  const InputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)  
+  }
+  const AddClick = () => {
+    //입력한 것 저장
+    setItems((prev) => [...prev, inputValue]);
+    //리스트로 입력한 내용 보여지기
+    //인풋빈칸
+    setInputValue("");
   }
   return(
     <>
-      <input onChange={InputChange} />
-      <button>Add</button>
+      <input onChange={InputChange} value={inputValue}/>
+      <button onClick={AddClick}>Add</button>
+      {items.map((item, index) => (
+        <li key={index}>{item}<button>delete</button></li>
+      ))}
     </>
   );
 }
