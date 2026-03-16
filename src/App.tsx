@@ -60,23 +60,30 @@ interface Itype {
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<Itype[]>([]);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)  
   }
   const addClick = () => {
     setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
     setInputValue("");
+
+    
   }
   const deleteBtn = (id:number) => {
     setItems(items.filter((item) => item.id !== id));
   }
-  const editBtn = (id:number) => {
-    console.log(id)
+  const editBtn = (item:Itype) => {
+    //클릭한 id의 내용들로 editingId를 설정하고, 클릭한 id의 내용들로 인풋을 채움
+    setEditingId(item.id)
+    setInputValue(item.text)
+    //add버튼이 save버튼으로 바뀌어야함
+    
   }
   return(
     <>
       <input onChange={inputChange} value={inputValue}/>
-      <button onClick={addClick}>Add</button>
+      <button onClick={addClick}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => (
         <li key={item.id}>
           {item.text}
