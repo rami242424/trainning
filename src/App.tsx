@@ -52,27 +52,37 @@ import { useState } from "react";
 
 // export default App;
 
+interface Itype {
+  id: number;
+  text: string;
+}
 
 function App(){
   const [inputValue, setInputValue] = useState("");
-  const [items, setItems] = useState([]);
-  const InputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+  const [items, setItems] = useState<Itype[]>([]);
+  const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value)  
   }
-  const AddClick = () => {
-    setItems((prev) => [...prev, inputValue]);
+  const addClick = () => {
+    setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
     setInputValue("");
   }
-  const DeleteBtn = (index) => {
-    //클릭한 애 찾아가서 filter로 삭제
-    setItems(items.filter((item, i) => index !== i));
+  const deleteBtn = (id:number) => {
+    setItems(items.filter((item) => item.id !== id));
+  }
+  const editBtn = (id:number) => {
+    console.log(id)
   }
   return(
     <>
-      <input onChange={InputChange} value={inputValue}/>
-      <button onClick={AddClick}>Add</button>
-      {items.map((item, index) => (
-        <li key={index}>{item}<button onClick = {() => {DeleteBtn(index)}}>delete</button></li>
+      <input onChange={inputChange} value={inputValue}/>
+      <button onClick={addClick}>Add</button>
+      {items.map((item) => (
+        <li key={item.id}>
+          {item.text}
+          <button onClick = {() => {deleteBtn(item.id)}}>delete</button>
+          <button onClick = {() => {editBtn(item)}}>edit</button>
+        </li>
       ))}
     </>
   );
