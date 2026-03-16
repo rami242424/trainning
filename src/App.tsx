@@ -60,18 +60,19 @@ function App(){
     setInputValue(e.target.value)  
   }
   const AddClick = () => {
-    //입력한 것 저장
     setItems((prev) => [...prev, inputValue]);
-    //리스트로 입력한 내용 보여지기
-    //인풋빈칸
     setInputValue("");
+  }
+  const DeleteBtn = (index) => {
+    //클릭한 애 찾아가서 filter로 삭제
+    setItems(items.filter((item, i) => index !== i));
   }
   return(
     <>
       <input onChange={InputChange} value={inputValue}/>
       <button onClick={AddClick}>Add</button>
       {items.map((item, index) => (
-        <li key={index}>{item}<button>delete</button></li>
+        <li key={index}>{item}<button onClick = {() => {DeleteBtn(index)}}>delete</button></li>
       ))}
     </>
   );
