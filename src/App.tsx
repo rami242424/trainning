@@ -66,12 +66,15 @@ function App(){
   }
   const addClick = () => {
     // 1. 빈칸인데 add 누를때
-    if(!inputValue) return;
+    if(!inputValue.trim()) return;
     if(editingId !== null) {
       // 수정일때
       setItems((prev) => (
-        prev.map((item) => editingId === item.id ? {id: item.id, text: inputValue} : item)
-      ))
+        //prev.map((item) => editingId === item.id ? {id: item.id, text: inputValue} : item)
+        prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item)
+      ));
+      setEditingId(null);
+
     } else {
       // 
       setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
@@ -81,7 +84,7 @@ function App(){
     
   }
   const deleteBtn = (id:number) => {
-    setItems(items.filter((item) => item.id !== id));
+    setItems((prev) => prev.filter((item) => item.id !== id));
   }
   const editBtn = (item:Itype) => {
     //클릭한 id의 내용들로 editingId를 설정하고, 클릭한 id의 내용들로 인풋을 채움
@@ -97,8 +100,8 @@ function App(){
       {items.map((item) => (
         <li key={item.id}>
           {item.text}
-          <button onClick = {() => {deleteBtn(item.id)}}>delete</button>
-          <button onClick = {() => {editBtn(item)}}>edit</button>
+          <button onClick = {() => deleteBtn(item.id)}>delete</button>
+          <button onClick = {() => editBtn(item)}>edit</button>
         </li>
       ))}
     </>
