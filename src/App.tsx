@@ -13,10 +13,8 @@ function App(){
     setInputValue(e.target.value)  
   }
   const addClick = () => {
-    // 1. 빈칸인데 add 누를때
     if(!inputValue.trim()) return;
     if(editingId !== null) {
-      // 수정일때
       setItems((prev) => (
         //prev.map((item) => editingId === item.id ? {id: item.id, text: inputValue} : item)
         prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item)
@@ -24,7 +22,6 @@ function App(){
       setEditingId(null);
 
     } else {
-      // 
       setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
     }
     setInputValue("");  
@@ -33,10 +30,8 @@ function App(){
     setItems((prev) => prev.filter((item) => item.id !== id));
   }
   const editBtn = (item:Itype) => {
-    //클릭한 id의 내용들로 editingId를 설정하고, 클릭한 id의 내용들로 인풋을 채움
     setEditingId(item.id)
     setInputValue(item.text)
-    //add버튼이 save버튼으로 바뀌어야함
   }
   return(
     <>
