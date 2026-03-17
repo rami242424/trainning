@@ -3,6 +3,7 @@ import { useState } from "react";
 interface IType {
   id: number;
   text: string;
+  completed: boolean;
 }
 
 function App(){
@@ -19,7 +20,7 @@ function App(){
       setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue}: item));
     } else{
       // 수정x, 단순 추가o
-      setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
+      setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed: false}]);
     }
     setInputValue("");
     setEditingId(null);
