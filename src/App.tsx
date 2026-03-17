@@ -52,26 +52,46 @@ import { useState } from "react";
 
 // export default App;
 
+interface IType {
+  id: number;
+  text: string;
+}
 
 function App(){
   const [inputValue, setInputValue] = useState("");
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<IType[]>([]);
+  const [editingId, setEditingId] = useState<number|null>(null);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
   const addClick = () => {
-    setItems((prev) => [...prev, inputValue]);
+    if(!inputValue.trim()) return;
+    if(editingId !== null){
+      //수정중이다
+      setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue}: item));
+    } else{
+      // 수정x, 단순 추가o
+      setItems((prev) => [...prev, {id: Date.now(), text: inputValue}]);
+    }
     setInputValue("");
+    setEditingId(null);
+  }
+  const deleteBtn = (id:number) => {
+    setItems((prev) => prev.filter((item) => item.id !== id));
+  }
+  const editBtn = (item:IType) => {
+    setEditingId(item.id);
+    setInputValue(item.text);
   }
   return (
     <>
       <input value={inputValue} onChange={inputChange}/>
-      <button onClick={addClick}>Add</button>
-      {items.map((item, index) => (
-        <li key={index}>
-          {item}
-          <button>delete</button>
-          <button>edit</button>
+      <button onClick={addClick}>{editingId !== null ? "SAVE" : "ADD"}</button>
+      {items.map((item, id) => (
+        <li key={id}>
+          {item.text}
+          <button onClick={() => {deleteBtn(item.id)}}>delete</button>
+          <button onClick={() => {editBtn(item)}}>edit</button>
         </li>
       ))}
     </>
