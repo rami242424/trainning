@@ -54,14 +54,26 @@ import { useState } from "react";
 
 
 function App(){
-  const [items, setItems] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [items, setItems] = useState([]);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    setItems(e.target.value);
+    setInputValue(e.target.value);
+  }
+  const addClick = () => {
+    setItems((prev) => [...prev, inputValue]);
+    setInputValue("");
   }
   return (
     <>
-      <input onChange={inputChange}/>
-      <button>Add</button>
+      <input value={inputValue} onChange={inputChange}/>
+      <button onClick={addClick}>Add</button>
+      {items.map((item, index) => (
+        <li key={index}>
+          {item}
+          <button>delete</button>
+          <button>edit</button>
+        </li>
+      ))}
     </>
   );
 }
