@@ -97,12 +97,17 @@ function App(){
     setEditingId(item.id);
     setInputValue(item.text);
   }
+  const toggleCompleted = (id:number) => {
+    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: !item.completed} : item))
+  }
   return (
     <>
       <input value={inputValue} onChange={inputBtn}/>
       <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => 
         <li key={item.id}>
+          <input type='checkbox' checked={item.completed} onChange={() => {toggleCompleted(item.id)}}/>
+          <span></span>
           {item.text}
           <button onClick={() => deleteBtn(item.id)}>delete</button>
           <button onClick={() => editBtn(item)}>edit</button>
