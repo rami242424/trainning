@@ -79,10 +79,19 @@ function App(){
     setInputValue(e.target.value);
   }
   const addBtn = () => {
-    setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
+    if(!inputValue.trim()) return;
+    // 수정
+    if(editingId !== null){
+      setItems((prev) => prev.map(item => editingId === item.id ? {...item, text:inputValue } : item))
+    } else {
+      setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
+    }
+    setInputValue("");
+    setEditingId(null);
   }
   const deleteBtn = (id:number) => {
     setItems((item) => item.filter(item => item.id !== id));
+    setInputValue("");
   }
   const editBtn = (item:IType) => {
     setEditingId(item.id);
@@ -91,7 +100,7 @@ function App(){
   return (
     <>
       <input value={inputValue} onChange={inputBtn}/>
-      <button onClick={addBtn}>Add</button>
+      <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => 
         <li key={item.id}>
           {item.text}
