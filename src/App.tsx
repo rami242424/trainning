@@ -74,16 +74,31 @@ interface IType {
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
+  const [editingId, setEditingId] = useState<number|null>(null);
   const inputBtn = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
   const addBtn = () => {
     setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
   }
+  const deleteBtn = (id:number) => {
+    setItems((item) => item.filter(item => item.id !== id));
+  }
+  const editBtn = (item:IType) => {
+    setEditingId(item.id);
+    setInputValue(item.text);
+  }
   return (
     <>
       <input value={inputValue} onChange={inputBtn}/>
       <button onClick={addBtn}>Add</button>
+      {items.map((item) => 
+        <li key={item.id}>
+          {item.text}
+          <button onClick={() => deleteBtn(item.id)}>delete</button>
+          <button onClick={() => editBtn(item)}>edit</button>
+        </li>
+      )}
     </>
   );
 }
