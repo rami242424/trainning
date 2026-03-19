@@ -65,47 +65,35 @@ import { useState } from "react";
 // }
 
 // export default App;
-interface IType{
+
+interface IType {
   id: number;
   text: string;
   completed: boolean;
 }
+
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
-  const [editingId, setEditingId] = useState<number|null>(null);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
   const addBtn = () => {
-    if(!inputValue.trim()) return;
-    if(editingId !== null){
-      //수정중일때
-      setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item))
-    } else {
-      setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
-    }
-    setInputValue("");
-    setEditingId(null);
+    setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}])
   }
   const deleteBtn = (id: number) => {
-    setItems((prev) => prev.filter(item => item.id !== id));
+    setItems((prev) => prev.filter((item) => item.id !== id));
   }
   const editBtn = (item:IType) => {
-    setInputValue(item.text)
-    setEditingId(item.id);
-  }
-  const completedInput = (id:number) => {
-    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: !item.completed} : item))
+    
   }
   return(
     <>
-      <input value={inputValue} onChange={inputChange} />
-      <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
+      <input onChange={inputChange}/>
+      <button onClick={addBtn}>Add</button>
       {items.map((item) => 
         <li key={item.id}>
-          <input type="checkbox" checked={item.completed} onChange={completedInput}/>
-          <span>{item.text}</span>
+          {item.text}
           <button onClick={() => deleteBtn(item.id)}>delete</button>
           <button onClick={() => editBtn(item)}>edit</button>
         </li>
