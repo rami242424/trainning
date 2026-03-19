@@ -73,23 +73,36 @@ interface IType{
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
+  const [editingId, setEditingId] = useState<number|null>(null);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
   const addBtn = () => {
     if(!inputValue.trim()) return;
+    if(editingId !== null){
+      //수정중일때
+      setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item))
+    }
     setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
     setInputValue("");
+    setEditingId(null);
+  }
+  const deleteBtn = (id: number) => {
+    setItems((prev) => prev.filter(item => item.id !== id));
+  }
+  const editBtn = (item:IType) => {
+    setInputValue(item.text)
+    setEditingId(item.id);
   }
   return(
     <>
       <input value={inputValue} onChange={inputChange} />
-      <button onClick={addBtn}>Add</button>
+      <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => 
         <li key={item.id}>
           {item.text}
-          <button>delete</button>
-          <button>edit</button>
+          <button onClick={() => deleteBtn(item.id)}>delete</button>
+          <button onClick={() => editBtn(item)}>edit</button>
         </li>
       )}
     </>
