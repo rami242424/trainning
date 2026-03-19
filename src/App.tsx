@@ -82,8 +82,9 @@ function App(){
     if(editingId !== null){
       //수정중일때
       setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item))
+    } else {
+      setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
     }
-    setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
     setInputValue("");
     setEditingId(null);
   }
@@ -94,13 +95,17 @@ function App(){
     setInputValue(item.text)
     setEditingId(item.id);
   }
+  const completedInput = (id:number) => {
+    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: !item.completed} : item))
+  }
   return(
     <>
       <input value={inputValue} onChange={inputChange} />
       <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => 
         <li key={item.id}>
-          {item.text}
+          <input type="checkbox" checked={item.completed} onChange={completedInput}/>
+          <span>{item.text}</span>
           <button onClick={() => deleteBtn(item.id)}>delete</button>
           <button onClick={() => editBtn(item)}>edit</button>
         </li>
