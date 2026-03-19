@@ -101,7 +101,7 @@ function App(){
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
-      <button onClick={addBtn}>Add</button>
+      <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => 
         <li key={item.id}>
           {item.text}
