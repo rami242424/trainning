@@ -72,6 +72,13 @@ interface IType {
   completed: boolean;
 }
 
+interface TodoInputProps {
+  inputValue: string;
+  inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
+  addBtn: () => void;
+  editingId: number | null;
+}
+
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
@@ -102,12 +109,16 @@ function App(){
   }
   return (
     <>
-      <input value={inputValue} onChange={inputChange}/>
-      <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
+      <TodoInput 
+        inputValue= {inputValue}
+        inputChange={inputChange}
+        addBtn={addBtn}
+        editingId= {editingId}
+      />
       {items.map((item) => 
         <li key={item.id}>
           <input type="checkbox" checked={item.completed} onChange={() => toggleCompleted(item.id)} />
-          <span>
+          <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>
             {item.text}
           </span>
           <button onClick={() => deleteBtn(item.id)}>delete</button>
@@ -117,6 +128,34 @@ function App(){
     </>
   );
 }
+
+
+function TodoInput({inputValue, inputChange, addBtn, editingId}: TodoInputProps){
+  
+  return(
+    <>
+      <input value={inputValue} onChange={inputChange}/>
+      <button onClick={addBtn}>
+        {editingId !== null ? "SAVE" : "ADD"}
+      </button>
+    </>
+  );
+}
+
+function TodoList(){
+  return(
+    <>
+    </>
+  );
+}
+
+function TodoItem(){
+  return(
+    <>
+    </>
+  );
+}
+
 
 export default App;
 
