@@ -79,6 +79,21 @@ interface TodoInputProps {
   editingId: number | null;
 }
 
+interface TodoListProps {
+  items: IType[];
+  toggleCompleted: (id:number) => void;
+  deleteBtn: (id:number) => void;
+  editBtn: (item:IType) => void;
+}
+
+interface TodoItemProps {
+  item: IType;
+  toggleCompleted: (id: number) => void;
+  deleteBtn: (id: number) => void;
+  editBtn: (item: IType) => void;
+}
+
+
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
@@ -89,7 +104,6 @@ function App(){
   const addBtn = () => {
     if(!inputValue.trim()) return;
     if(editingId !== null) {
-      // 수정중
       setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item));
     } else {
     setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed: false}]);
@@ -97,15 +111,15 @@ function App(){
     setInputValue("");
     setEditingId(null);
   }
-  const deleteBtn = (id: number) => {
+  const toggleCompleted = (id:number) => {
+    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: !item.completed} : item));
+  }
+  const deleteBtn = (id:number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   }
   const editBtn = (item:IType) => {
-    setInputValue(item.text);
     setEditingId(item.id);
-  }
-  const toggleCompleted = (id: number) => {
-    setItems((prev) => prev.map((item) => id === item.id ? {...item, completed: !item.completed} : item));
+    setInputValue(item.text);
   }
   return (
     <>
@@ -115,16 +129,12 @@ function App(){
         addBtn={addBtn}
         editingId= {editingId}
       />
-      {items.map((item) => 
-        <li key={item.id}>
-          <input type="checkbox" checked={item.completed} onChange={() => toggleCompleted(item.id)} />
-          <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>
-            {item.text}
-          </span>
-          <button onClick={() => deleteBtn(item.id)}>delete</button>
-          <button onClick={() => editBtn(item)}>edit</button>
-        </li>
-        )}
+      <TodoList 
+        items={items}
+        toggleCompleted={toggleCompleted}
+        deleteBtn={deleteBtn}
+        editBtn={editBtn}
+      />
     </>
   );
 }
@@ -142,16 +152,32 @@ function TodoInput({inputValue, inputChange, addBtn, editingId}: TodoInputProps)
   );
 }
 
-function TodoList(){
+function TodoList({items,toggleCompleted,deleteBtn,editBtn}:TodoListProps){
   return(
     <>
+      {items.map((item) => 
+        <li key={item.id}>
+          <TodoItem 
+            item={item}
+            toggleCompleted={toggleCompleted}
+            deleteBtn={deleteBtn}
+            editBtn={editBtn}
+          />
+        </li>
+      )}
     </>
   );
 }
 
-function TodoItem(){
+function TodoItem({item, toggleCompleted, deleteBtn, editBtn} :TodoItemProps){
   return(
     <>
+      <input type="checkbox" checked={item.completed} onChange={() => toggleCompleted(item.id)} />
+        <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>
+          {item.text}
+        </span>
+      <button onClick={() => deleteBtn(item.id)}>delete</button>
+      <button onClick={() => editBtn(item)}>edit</button>
     </>
   );
 }
