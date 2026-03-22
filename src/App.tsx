@@ -1,6 +1,9 @@
 function App(){
   return(
-
+    <>
+      <input />
+      <button>Add</button>
+    </>
   );
 }
 
