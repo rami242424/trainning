@@ -12,7 +12,15 @@ function App(){
     setInputValue(e.target.value);
   }
   const addBtn = () => {
+    if(!inputValue.trim()) return;
     setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
+    setInputValue("");
+  }
+  const deleteBtn = () => {
+
+  }
+  const editBtn = () => {
+
   }
   return(
     <>
@@ -21,8 +29,8 @@ function App(){
       {items.map((item) => 
         <li key={item.id}>
           {item.text}
-          <button>delete</button>
-          <button>edit</button>
+          <button onClick={deleteBtn}>delete</button>
+          <button onClick={editBtn}>edit</button>
         </li>
       )}
     </>
