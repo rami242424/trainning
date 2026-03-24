@@ -16,14 +16,14 @@ function App(){
   }
   return(
     <>
-      <input value="inputValue" onChange={inputChange}/>
+      <input value={inputValue} onChange={inputChange}/>
       <button onClick={addBtn}>Add</button>
       {items.map((item) => 
-      <ul>
-        <li key={item.id}>{item.text}</li>
-        <button>delete</button>
-        <button>edit</button>
-      </ul>
+        <li key={item.id}>
+          {item.text}
+          <button>delete</button>
+          <button>edit</button>
+        </li>
       )}
     </>
   );
