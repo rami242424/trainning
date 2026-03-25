@@ -16,11 +16,12 @@ function App(){
     setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
     setInputValue("");
   }
-  const deleteBtn = () => {
-
+  const deleteBtn = (id:number) => {
+    setItems((items) => items.filter((item) => item.id !== id));
   }
-  const editBtn = () => {
-
+  const editBtn = (item:IType) => {
+    setInputValue(item.text);
+    
   }
   return(
     <>
@@ -29,8 +30,8 @@ function App(){
       {items.map((item) => 
         <li key={item.id}>
           {item.text}
-          <button onClick={deleteBtn}>delete</button>
-          <button onClick={editBtn}>edit</button>
+          <button onClick={() => deleteBtn(item.id)}>delete</button>
+          <button onClick={() => editBtn(item)}>edit</button>
         </li>
       )}
     </>
