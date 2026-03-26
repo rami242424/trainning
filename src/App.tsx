@@ -15,35 +15,39 @@ function App(){
   const addBtn = () => {
     if(!inputValue.trim()) return;
     if(editingId !== null){
-      setItems((item) => item.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
+      setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
     } else {
-      setItems((item) => [...item, {id:Date.now(), text:inputValue, completed:false}]);
+      setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
     }
     setInputValue("");
     setEditingId(null);
   }
   const deleteBtn = (id:number) => {
-    setItems((item) => item.filter((item) => item.id !== id) );
+    setItems((prev) => prev.filter((item) => item.id !== id) );
   }
   const editBtn = (item:IType) => {
     setInputValue(item.text);
     setEditingId(item.id);
   }
   const toggleInput = (id: number) => {
-    setItems((item) => item.map((item) => id === item.id ? {...item, completed: !item.completed} : item));
+    setItems((prev) => prev.map((item) => id === item.id ? {...item, completed: !item.completed} : item));
   }
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
       <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
-      {items.map((item) => 
-        <li key={item.id}>
-          <input type="checkbox" onChange={() => toggleInput(item.id)} checked={item.completed}/>
-          <span style={{ textDecoration: item.completed == true ? "line-through" : "none" }}>{item.text}</span>
-          <button onClick={()=>deleteBtn(item.id)}>delete</button>
-          <button onClick={()=>editBtn(item)}>edit</button>
-        </li>
-      )}
+      {items.length === 0 ? (
+        <span>할일없음</span>
+      ) : (
+        items.map((item) => 
+          <li key={item.id}>
+            <input type="checkbox" onChange={() => toggleInput(item.id)} checked={item.completed}/>
+            <span style={{ textDecoration: item.completed  ? "line-through" : "none" }}>{item.text}</span>
+            <button onClick={()=>deleteBtn(item.id)}>delete</button>
+            <button onClick={()=>editBtn(item)}>edit</button>
+          </li>
+        ))
+      }
     </>
   );
 }
