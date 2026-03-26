@@ -38,7 +38,7 @@ function App(){
       <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => 
         <li key={item.id}>
-          <input type="checkbox" onClick={() => toggleInput(item.id)} checked={item.completed}/>
+          <input type="checkbox" onChange={() => toggleInput(item.id)} checked={item.completed}/>
           <span style={{ textDecoration: item.completed == true ? "line-through" : "none" }}>{item.text}</span>
           <button onClick={()=>deleteBtn(item.id)}>delete</button>
           <button onClick={()=>editBtn(item)}>edit</button>
