@@ -9,6 +9,7 @@ interface IType {
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
+  const [editingId, SetEditingId] = useState<number|null>(null);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
@@ -20,7 +21,7 @@ function App(){
     setItems((prev) => prev.filter((item) => item.id !== id));
   }
   const editBtn = (item: IType) => {
-
+    setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
   }
   return (
     <>
