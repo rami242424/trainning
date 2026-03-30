@@ -1,10 +1,32 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface IType {
   id: number;
   text: string;
   completed: boolean;
 }
+
+interface TodoInputProps {
+  inputValue: string;
+  inputChange : (e:React.ChangeEvent<HTMLInputElement>) => void;
+  updatedBtn : () => void;
+  editingId: number | null;
+}
+
+interface TodoListProps {
+  items: IType[];
+  toggleChange : (id:number, checked: boolean) => void;
+  deleteBtn : (id:number) => void;
+  editBtn : (text: string, id: number) => void;
+}
+
+interface TodoItemProps {
+  toggleChange : (id:number, checked: boolean) => void;
+  deleteBtn : (id:number) => void;
+  editBtn : (text: string, id: number) => void;
+  item : IType;
+}
+
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
@@ -12,13 +34,21 @@ function App(){
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
+  const updatedBtn = () => {
+    if (editingId === null) {
+      addBtn();
+    } else {
+      afterEditBtn();
+    }
+  }
   const addBtn = () => {
     if(!inputValue.trim()) return;
-    if(editingId !== null){
-      setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
-    } else {
-    setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed: false}]);
-    }
+    setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed:false}]);
+    setInputValue("");
+    SetEditingId(null);
+  }
+  const afterEditBtn = () => {
+    setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
     setInputValue("");
     SetEditingId(null);
   }
@@ -32,20 +62,59 @@ function App(){
   const toggleChange = (id:number, checked: boolean) => {
     setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
   }
+
   return (
     <>
-      <input value={inputValue} onChange={inputChange}/>
-      <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
-      {items.map((item) => (
-        <li key={item.id}>
-          <input type="checkbox" onChange={(e) => toggleChange(item.id, e.target.checked)} checked={item.completed}/>
-          <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
-          <button onClick={() => deleteBtn(item.id)}>Delete</button>
-          <button onClick={() => editBtn(item.text, item.id)}>Edit</button>
-        </li>
-      ))}
+      <TodoInput 
+        inputValue = {inputValue}
+        inputChange = {inputChange}
+        updatedBtn = {updatedBtn}
+        editingId = {editingId}
+      />
+      <TodoList 
+        items={items}
+        toggleChange = {toggleChange}
+        deleteBtn = {deleteBtn}
+        editBtn = {editBtn}
+  />
     </>
   )
 }
 
 export default App;
+
+function TodoInput ({inputValue, inputChange, updatedBtn, editingId} :TodoInputProps ){
+  return(
+    <>
+      <input value={inputValue} onChange={inputChange}/>
+      <button onClick={updatedBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
+    </>
+  );
+}
+
+function TodoList({items, toggleChange, deleteBtn, editBtn} : TodoListProps){
+  return (
+    <>
+      {items.map((item) => (
+        <li key={item.id}>
+          <TodoItem 
+            toggleChange = {toggleChange}
+            item = {item}
+            deleteBtn = {deleteBtn}
+            editBtn = {editBtn}
+          />
+        </li>
+      ))}
+    </>
+  )
+}
+function TodoItem({toggleChange, item, deleteBtn, editBtn} :TodoItemProps ){
+  return(
+    <>
+      <input type="checkbox" onChange={(e) => toggleChange(item.id, e.target.checked)} checked={item.completed}/>
+      <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
+      <button onClick={() => deleteBtn(item.id)}>Delete</button>
+      <button onClick={() => editBtn(item.text, item.id)}>Edit</button>
+    </>
+  );
+}
