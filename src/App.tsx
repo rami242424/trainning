@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { ToDoContext } from "./TodoContext";
 
 interface IType {
   id: number;
@@ -64,20 +65,15 @@ function App(){
   }
 
   return (
-    <>
+    <ToDoContext.Provider value={{ toggleChange, deleteBtn, editBtn}}>
       <TodoInput 
         inputValue = {inputValue}
         inputChange = {inputChange}
         updatedBtn = {updatedBtn}
         editingId = {editingId}
       />
-      <TodoList 
-        items={items}
-        toggleChange = {toggleChange}
-        deleteBtn = {deleteBtn}
-        editBtn = {editBtn}
-  />
-    </>
+      <TodoList items={items} />
+    </ToDoContext.Provider>
   )
 }
 
@@ -92,7 +88,10 @@ function TodoInput ({inputValue, inputChange, updatedBtn, editingId} :TodoInputP
   );
 }
 
-function TodoList({items, toggleChange, deleteBtn, editBtn} : TodoListProps){
+function TodoList({items} : {items : IType[]}){
+  const context = useContext(ToDoContext);
+  if(!context) return null;
+  const {toggleChange, deleteBtn, editBtn} = context;
   return (
     <>
       {items.map((item) => (
