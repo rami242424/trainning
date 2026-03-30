@@ -14,14 +14,21 @@ function App(){
     setInputValue(e.target.value);
   }
   const addBtn = () => {
+    if(!inputValue.trim()) return;
+    if(editingId !== null){
+      setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
+    } else {
     setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed: false}]);
+    }
     setInputValue("");
+    SetEditingId(null);
   }
   const deleteBtn = (id: number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   }
   const editBtn = (item: IType) => {
-    setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
+    setInputValue(item.text);
+    SetEditingId(item.id);
   }
   return (
     <>
