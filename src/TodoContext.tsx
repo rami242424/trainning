@@ -1,11 +1,9 @@
 import { createContext } from "react";
 
-export const ToDoContext = createContext(null);
-
-export function TodoProvider({ children }){
-    return (
-        <ToDoContext.Provider value={null}>
-            {children}
-        </ToDoContext.Provider>
-    );
+interface ToDoContextType {
+    toggleChange : (id:number, checked: boolean) => void;
+    deleteBtn : (id:number) => void;
+    editBtn : (text: string, id: number) => void;
 }
+
+export const ToDoContext = createContext<ToDoContextType | null>(null);
