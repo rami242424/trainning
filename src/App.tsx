@@ -29,8 +29,8 @@ function App(){
     setInputValue(text);
     SetEditingId(id);
   }
-  const toggleChange = (id:number) => {
-    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed:!item.completed} : item));
+  const toggleChange = (id:number, checked: boolean) => {
+    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
   }
   return (
     <>
@@ -38,7 +38,7 @@ function App(){
       <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
       {items.map((item) => (
         <li key={item.id}>
-          <input type="checkbox" onChange={() => toggleChange(item.id)} checked={item.completed}/>
+          <input type="checkbox" onChange={(e) => toggleChange(item.id, e.target.checked)} checked={item.completed}/>
           <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
           <button onClick={() => deleteBtn(item.id)}>Delete</button>
           <button onClick={() => editBtn(item.text, item.id)}>Edit</button>
