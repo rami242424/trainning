@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 interface IType {
   id: number;
   text: string;
@@ -30,13 +29,17 @@ function App(){
     setInputValue(item.text);
     SetEditingId(item.id);
   }
+  const toggleChange = (id:number) => {
+    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed:!item.completed} : item));
+  }
   return (
     <>
       <input value={inputValue} onChange={inputChange}/>
       <button onClick={addBtn}>Add</button>
       {items.map((item) => (
         <li key={item.id}>
-          {item.text}
+          <input type="checkbox" onChange={() => toggleChange(item.id)} checked={item.completed}/>
+          <span>{item.text}</span>
           <button onClick={() => deleteBtn(item.id)}>Delete</button>
           <button onClick={() => editBtn(item)}>Edit</button>
         </li>
