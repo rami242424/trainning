@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { ToDoContext } from "./TodoContext";
 
-interface IType {
+export interface IType {
   id: number;
   text: string;
   completed: boolean;
@@ -10,7 +10,6 @@ interface IToDoInputProps {
   inputValue:string
   inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
   updatedItem: () => void;
-  editingId: number|null;
 }
 
 function App(){
@@ -50,23 +49,23 @@ function App(){
     setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
   }
   return (
-    <ToDoContext.Provider value={{deleteBtn, editBtn, toggleChange}}>
+    <ToDoContext.Provider value={{deleteBtn, editBtn, toggleChange, editingId, items}}>
       <ToDoInput 
         inputValue={inputValue}
         inputChange={inputChange} 
         updatedItem={updatedItem}
-        editingId={editingId}
       />
-      <ToDoList 
-        items={items}
-      />
+      <ToDoList />
     </ToDoContext.Provider>
   );
 }
 
 export default App;
 
-function ToDoInput({inputValue, inputChange, updatedItem, editingId} : IToDoInputProps){
+function ToDoInput({inputValue, inputChange, updatedItem} : IToDoInputProps){
+  const context = useContext(ToDoContext);
+  if(!context) return null;
+  const {editingId} = context;
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
@@ -74,7 +73,10 @@ function ToDoInput({inputValue, inputChange, updatedItem, editingId} : IToDoInpu
     </>
   );
 }
-function ToDoList({items}:{items:IType[]}){
+function ToDoList(){
+  const context = useContext(ToDoContext);
+  if(!context) return null;
+  const {items} = context;
   return(
     <>
       {items.map((item) => (
