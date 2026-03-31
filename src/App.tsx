@@ -15,11 +15,24 @@ function App(){
   const addBtn = () => {
     setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed: false}]);
   }
+  const deleteBtn = (id: number) => {
+    
+  }
+  const editBtn = (item:IType) => {
+
+  }
 
   return (
   <>
     <input value={inputValue} onChange={inputChange}/>
     <button onClick={addBtn}>Add</button>
+    {items.map((item) => (
+      <li key={item.id}>
+        {item.text}
+        <button onClick={() => deleteBtn(item.id)}>delete</button>
+        <button onClick={() => editBtn(item)}>edit</button>
+      </li>
+    ))}
   </>
   );
 }
