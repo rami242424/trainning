@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ToDoContextType } from "./TodoContext";
+import { ToDoContext } from "./TodoContext";
 
 interface IType {
   id: number;
@@ -50,7 +50,7 @@ function App(){
     setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
   }
   return (
-    <ToDoContextType.Provider value={{deleteBtn, editBtn, toggleChange}}>
+    <ToDoContext.Provider value={{deleteBtn, editBtn, toggleChange}}>
       <ToDoInput 
         inputValue={inputValue}
         inputChange={inputChange} 
@@ -60,7 +60,7 @@ function App(){
       <ToDoList 
         items={items}
       />
-    </ToDoContextType.Provider>
+    </ToDoContext.Provider>
   );
 }
 
@@ -86,7 +86,7 @@ function ToDoList({items}:{items:IType[]}){
   );
 }
 function ToDoItem({item}:{item: IType}){
-  const context = useContext(ToDoContextType);
+  const context = useContext(ToDoContext);
   if(!context) return null;
   const {deleteBtn, editBtn, toggleChange} = context;
   return(

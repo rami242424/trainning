@@ -6,4 +6,4 @@ interface ToDoContextType {
     toggleChange: (id: number, checked: boolean) => void;
 }
 
-export const ToDoContextType = createContext<ToDoContextType | null>(null);
+export const ToDoContext = createContext<ToDoContextType | null>(null);
