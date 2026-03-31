@@ -7,6 +7,14 @@ export interface IType {
   completed: boolean;
 }
 
+function useTodo(){
+    const context = useContext(ToDoContext);
+    if(!context) {
+        throw new Error ("useTodo must be used within TodoProvider");
+    }
+    return context;
+}
+
 export function TodoProvider({children} : {children: React.ReactNode}){
     const [inputValue, setInputValue] = useState("");
       const [items, setItems] = useState<IType[]>([]);
@@ -56,9 +64,7 @@ export function TodoProvider({children} : {children: React.ReactNode}){
 
 
 export function ToDoInput(){
-  const context = useContext(ToDoContext);
-  if(!context) return null;
-  const {inputValue, inputChange, updatedItem, editingId} = context;
+  const {inputValue, inputChange, updatedItem, editingId} = useTodo();
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
@@ -68,9 +74,7 @@ export function ToDoInput(){
 }
 
 export function ToDoList(){
-  const context = useContext(ToDoContext);
-  if(!context) return null;
-  const {items} = context;
+  const {items} = useTodo();
   return(
     <>
       {items.map((item) => (
@@ -83,9 +87,7 @@ export function ToDoList(){
 }
 
 export function ToDoItem({item}:{item: IType}){
-  const context = useContext(ToDoContext);
-  if(!context) return null;
-  const {deleteBtn, editBtn, toggleChange} = context;
+  const {deleteBtn, editBtn, toggleChange} = useTodo();
   return(
     <>
       <input type="checkbox" checked={item.completed} onChange={(e) => toggleChange(item.id, e.target.checked)}/>
