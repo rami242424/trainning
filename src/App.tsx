@@ -24,6 +24,7 @@ function App(){
     if(!inputValue.trim()) return;
     setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed: false}]);
     setInputValue("");
+    setEditingId(null);
   }
   const deleteBtn = (id: number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
@@ -34,6 +35,8 @@ function App(){
   }
   const afterEdit = () => {
     setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item));
+    setInputValue("");
+    setEditingId(null);
   }
 
   const updatedItem = () => {
@@ -67,7 +70,7 @@ function ToDoInput({inputValue, inputChange, updatedItem, editingId} : IToDoInpu
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
-      <button onClick={updatedItem}>{editingId ? "SAVE" : "ADD"}</button>
+      <button onClick={updatedItem}>{editingId !== null ? "SAVE" : "ADD"}</button>
     </>
   );
 }
@@ -89,7 +92,7 @@ function ToDoItem({item}:{item: IType}){
   return(
     <>
       <input type="checkbox" checked={item.completed} onChange={(e) => toggleChange(item.id, e.target.checked)}/>
-      {item.text}
+      <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
       <button onClick={() => deleteBtn(item.id)}>delete</button>
       <button onClick={() => editBtn(item.id, item.text)}>edit</button>
     </>
