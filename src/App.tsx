@@ -5,7 +5,17 @@ interface IType {
   text: string;
   completed: boolean;
 }
+interface IToDoInputProps {
+  inputValue:string
+  inputChange: () => void;
+  updatedItem: () => void;
+}
 
+interface IToDoItemProps {
+  item:IType[];
+  deleteBtn:() =>void;
+  editBtn:() => void;
+}
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
@@ -38,18 +48,46 @@ function App(){
   }
 
   return (
-  <>
-    <input value={inputValue} onChange={inputChange}/>
-    <button onClick={updatedItem}>Add</button>
-    {items.map((item) => (
-      <li key={item.id}>
-        {item.text}
-        <button onClick={() => deleteBtn(item.id)}>delete</button>
-        <button onClick={() => editBtn(item)}>edit</button>
-      </li>
-    ))}
-  </>
+    <>
+      <ToDoInput 
+        inputValue={inputValue}
+        inputChange={inputChange} 
+        updatedItem={updatedItem}
+      />
+      <ToDoList 
+        items={items}
+      />
+    </>
   );
 }
 
 export default App;
+
+function ToDoInput({inputValue, inputChange, updatedItem} : IToDoInputProps){
+  return(
+    <>
+      <input value={inputValue} onChange={inputChange}/>
+      <button onClick={updatedItem}>Add</button>
+    </>
+  );
+}
+function ToDoList({items}:IType[]){
+  return(
+    <>
+      {items.map((item) => (
+        <li key={item.id}>
+          <ToDoItem />
+        </li>
+      ))}
+    </>
+  );
+}
+function ToDoItem({item, deleteBtn, editBtn}:IToDoItemProps){
+  return(
+    <>
+      {item.text}
+      <button onClick={() => deleteBtn(item.id)}>delete</button>
+      <button onClick={() => editBtn(item)}>edit</button>
+    </>
+  );
+}
