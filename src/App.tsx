@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ToDoContextType } from "./TodoContext";
 
 interface IType {
   id: number;
@@ -7,15 +8,11 @@ interface IType {
 }
 interface IToDoInputProps {
   inputValue:string
-  inputChange: () => void;
+  inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
   updatedItem: () => void;
+  editingId: number|null;
 }
 
-interface IToDoItemProps {
-  item:IType[];
-  deleteBtn:() =>void;
-  editBtn:() => void;
-}
 function App(){
   const [inputValue, setInputValue] = useState("");
   const [items, setItems] = useState<IType[]>([]);
@@ -31,9 +28,9 @@ function App(){
   const deleteBtn = (id: number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   }
-  const editBtn = (item:IType) => {
-    setInputValue(item.text);
-    setEditingId(item.id);
+  const editBtn = (id: number, text: string) => {
+    setInputValue(text);
+    setEditingId(id);
   }
   const afterEdit = () => {
     setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item));
@@ -46,48 +43,55 @@ function App(){
       addBtn();
     }
   }
-
+  const toggleChange = (id:number, checked:boolean) => {
+    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
+  }
   return (
-    <>
+    <ToDoContextType.Provider value={{deleteBtn, editBtn, toggleChange}}>
       <ToDoInput 
         inputValue={inputValue}
         inputChange={inputChange} 
         updatedItem={updatedItem}
+        editingId={editingId}
       />
       <ToDoList 
         items={items}
       />
-    </>
+    </ToDoContextType.Provider>
   );
 }
 
 export default App;
 
-function ToDoInput({inputValue, inputChange, updatedItem} : IToDoInputProps){
+function ToDoInput({inputValue, inputChange, updatedItem, editingId} : IToDoInputProps){
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
-      <button onClick={updatedItem}>Add</button>
+      <button onClick={updatedItem}>{editingId ? "SAVE" : "ADD"}</button>
     </>
   );
 }
-function ToDoList({items}:IType[]){
+function ToDoList({items}:{items:IType[]}){
   return(
     <>
       {items.map((item) => (
         <li key={item.id}>
-          <ToDoItem />
+          <ToDoItem item={item}/>
         </li>
       ))}
     </>
   );
 }
-function ToDoItem({item, deleteBtn, editBtn}:IToDoItemProps){
+function ToDoItem({item}:{item: IType}){
+  const context = useContext(ToDoContextType);
+  if(!context) return null;
+  const {deleteBtn, editBtn, toggleChange} = context;
   return(
     <>
+      <input type="checkbox" checked={item.completed} onChange={(e) => toggleChange(item.id, e.target.checked)}/>
       {item.text}
       <button onClick={() => deleteBtn(item.id)}>delete</button>
-      <button onClick={() => editBtn(item)}>edit</button>
+      <button onClick={() => editBtn(item.id, item.text)}>edit</button>
     </>
   );
 }
