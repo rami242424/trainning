@@ -51,6 +51,7 @@ export function TodoProvider({children} : {children: React.ReactNode}){
       const toggleChange = (id:number, checked:boolean) => {
         setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
       }
+      
     return(
         <ToDoContext.Provider 
             value={{
