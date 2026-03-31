@@ -1,6 +1,5 @@
-import { useContext, useReducer, useState } from "react";
+import { useContext, useReducer,  } from "react";
 import { ToDoContext } from "./TodoContext";
-import { IType } from './TodoProvider';
 
 export interface IType {
   id: number;
