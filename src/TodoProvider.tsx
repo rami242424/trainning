@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-interface IType {
+export interface IType {
     id: number;
     text: string;
     completed: boolean;
@@ -40,18 +40,42 @@ function TodoProvider(){
     
     return(
         <>
-            <input value={inputValue} onChange={inputChange}/>
-            <button onClick={updatedItem}>{editingId !== null ? "SAVE" : "ADD"}</button>
-            {items.map((item) => 
-                <li>
-                    <input type="checkbox" onChange={(e) => toggleInput(item.id, e.target.checked)} checked={item.completed}/>
-                    <span>{item.text}</span>
-                    <button onClick={() => deleteBtn(item.id)}>delete</button>
-                    <button onClick={() => editBtn(item)}>edit</button>
-                </li>
-            )}
+            <ToDoInput />
+            <ToDoList />
         </>
     );
 }
 
 export default TodoProvider;
+
+export function ToDoInput(){
+    return(
+        <>
+            <input value={inputValue} onChange={inputChange}/>
+            <button onClick={updatedItem}>{editingId !== null ? "SAVE" : "ADD"}</button>
+        </>
+    );
+}
+
+export function ToDoList(){
+    return(
+        <>
+            {items.map((item) => 
+                <ToDoItem />
+            )}
+        </>
+    );
+}
+
+export function ToDoItem(){
+    return(
+        <>
+            <li>
+                <input type="checkbox" onChange={(e) => toggleInput(item.id, e.target.checked)} checked={item.completed}/>
+                <span>{item.text}</span>
+                <button onClick={() => deleteBtn(item.id)}>delete</button>
+                <button onClick={() => editBtn(item)}>edit</button>
+            </li>
+        </>
+    );
+}
