@@ -13,12 +13,22 @@ function TodoProvider(){
     const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value)
     }
+    const updatedItem = () => {
+        if(editingId !== null){
+            addBtn();
+        } else {
+            afterEdit();
+        }
+    }
+    const afterEdit = () => {
+        setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} :item));
+    }
     const addBtn = () => {
         setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
         setInputValue("");
     }
-    const deleteBtn = () => {
-
+    const deleteBtn = (id:number) => {
+        setItems((prev) => prev.filter((item) => item.id !== id));
     }
     const editBtn = (item:IType) => {
         setInputValue(item.text);
@@ -28,7 +38,7 @@ function TodoProvider(){
     return(
         <>
             <input value={inputValue} onChange={inputChange}/>
-            <button onClick={addBtn}>ADD</button>
+            <button onClick={updatedItem}>{editingId !== null ? "SAVE" : "ADD"}</button>
             {items.map((item) => 
                 <li>
                     {item.text}
