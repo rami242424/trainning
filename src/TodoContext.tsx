@@ -21,15 +21,15 @@ import type { IType } from './TodoProvider';
 //     dispatch: React.Dispatch<Action>;
 // }
 
-interface ToDoContextType {
+interface TodoContextType {
     deleteBtn: (id: number) => void;
     editBtn: (id: number, text: string) => void;
     toggleChange: (id: number, checked: boolean) => void;
     editingId: number | null;
     items: IType[];
-    // inputValue: string;
-    // inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
-    // updatedItem: () => void;
+    inputValue: string;
+    inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
+    updatedItem: () => void;
 }
 
-export const ToDoContext = createContext<ToDoContextType | null>(null);
+export const TodoContext = createContext<TodoContextType | null>(null);

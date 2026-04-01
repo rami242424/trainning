@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ToDoContext } from './TodoContext';
+import { TodoContext } from './TodoContext';
 
 export interface IType {
     id: number;
@@ -7,15 +7,16 @@ export interface IType {
     completed: boolean;
 }
 
-interface IToDoInputProps {
-    inputValue: string;
-    inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
-    updatedItem: () => void;     
+function useTodo(){
+    const context = useContext(TodoContext);
+    if(!context){
+        throw new Error ("useTodo must be used within TodoProvider");
+    }
+    return context;
 }
 
 
-
-function TodoProvider(){
+export function TodoProvider({ children } : ){
     const [inputValue, setInputValue] = useState("");
     const [items, setItems] = useState<IType[]>([]);
     const [editingId, setEditingId] = useState<number|null>(null);
@@ -48,23 +49,16 @@ function TodoProvider(){
     }
     
     return(
-        <ToDoContext.Provider value={{ toggleChange, deleteBtn, editBtn, items, editingId }}>
-            <ToDoInput 
-                inputValue = {inputValue}
-                inputChange = {inputChange}
-                updatedItem = {updatedItem}
-            />
-            <ToDoList />
-        </ToDoContext.Provider>
+        <TodoContext.Provider 
+            value={{ toggleChange, deleteBtn, editBtn, items, editingId, inputValue, inputChange, updatedItem }}>
+            {children}
+        </TodoContext.Provider>
     );
 }
 
-export default TodoProvider;
 
-export function ToDoInput({inputValue, inputChange, updatedItem} : IToDoInputProps){
-    const context = useContext(ToDoContext);
-    if(!context) return null;
-    const {editingId} = context;
+export function ToDoInput(){
+    const {editingId, inputValue, inputChange, updatedItem } = useTodo();
     return(
         <>
             <input value={inputValue} onChange={inputChange}/>
@@ -74,9 +68,7 @@ export function ToDoInput({inputValue, inputChange, updatedItem} : IToDoInputPro
 }
 
 export function ToDoList(){
-    const context = useContext(ToDoContext);
-    if(!context) return null;
-    const {items} = context;
+    const {items} = useTodo();
     return(
         <>
             {items.map((item) => (
@@ -92,9 +84,7 @@ export function ToDoList(){
 }
 
 export function ToDoItem({ item }:{ item: IType }){
-    const context = useContext(ToDoContext);
-    if(!context) return null;
-    const {toggleChange, deleteBtn, editBtn} = context;
+    const {toggleChange, deleteBtn, editBtn} = useTodo();
     return(
         <>
             <input type="checkbox" onChange={(e) => toggleChange(item.id, e.target.checked)} checked={item.completed}/>

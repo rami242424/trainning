@@ -1,4 +1,4 @@
-import { ToDoInput, ToDoList, TodoProvider } from "./TodoProvider";
+import { ToDoInput, ToDoList, TodoProvider} from "./TodoProvider";
 
 function App(){
   return (
