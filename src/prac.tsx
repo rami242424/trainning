@@ -1,164 +1,190 @@
-// import { useState } from "react";
+import { useContext, useReducer,  } from "react";
+import { ToDoContext } from "./TodoContext";
 
-// interface IType {
-//   id: number;
-//   text: string;
-//   completed: boolean;
-// }
+export interface IType {
+  id: number;
+  text: string;
+  completed: boolean;
+}
 
-// interface TodoInputProps {
-//   inputValue: string;
-//   inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
-//   addBtn: () => void;
-//   editingId: number | null;
-// }
+//----------------state 타입
+type State = {
+    items: IType[];
+    inputValue: string;
+    editingId: number | null;
+}
 
-// interface TodoItemProps {
-//   item: IType;
-//   toggleCompleted: (id: number) => void;
-//   deleteBtn: (id: number) => void;
-//   editBtn: (item: IType) => void;
-// }
+//--------------------action 타입
+type Action = 
+    | { type: "SET_INPUT"; payload: string }
+    | { type: "ADD" }
+    | { type: "DELETE"; payload: number }    
+    | { type: "START_EDIT"; payload: {id:number; text:string} }
+    | { type: "EDIT" }
+    | { type: "TOGGLE"; payload: {id:number; checked:boolean} }
+;
 
-// function App(){
-//   const [inputValue, setInputValue] = useState("");
-//   const [items, setItems] = useState<IType[]>([]);
-//   const [editingId, setEditingId] = useState<number|null>(null);
-//   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-//     setInputValue(e.target.value);
-//   }
-//   const addBtn = () => {
-//     if(!inputValue.trim()) return;
-//     if(editingId !== null) {
-//       setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text: inputValue} : item));
-//     } else {
-//     setItems((prev) => [...prev, {id: Date.now(), text: inputValue, completed: false}]);
-//     }
-//     setInputValue("");
-//     setEditingId(null);
-//   }
-//   const toggleCompleted = (id:number) => {
-//     setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: !item.completed} : item));
-//   }
-//   const deleteBtn = (id:number) => {
-//     setItems((prev) => prev.filter((item) => item.id !== id));
-//   }
-//   const editBtn = (item:IType) => {
-//     setEditingId(item.id);
-//     setInputValue(item.text);
-//   }
-//   return (
-//     <>
-//       <TodoInput 
-//         inputValue= {inputValue}
-//         inputChange={inputChange}
-//         addBtn={addBtn}
-//         editingId= {editingId}
-//       />
-//       {items.map((item) => 
-//         <li key={item.id}>
-//           <TodoItem 
-//             item={item}
-//             toggleCompleted={toggleCompleted}
-//             deleteBtn={deleteBtn}
-//             editBtn={editBtn}
-//           />
-//         </li>
-//       )}
-//     </>
-//   );
-// }
+//-----------------초기상태
+const initialState: State = {
+    items: [],
+    inputValue: "",
+    editingId: null
+};
+
+//-------------------reducer
+function todoReducer(state: State, action: Action): State {
+    switch(action.type) {
+        case "SET_INPUT":
+            return {...state, inputValue: action.payload};
+        case "ADD":
+            if(!state.inputValue.trim()) return state;
+            return {
+                ...state,
+                items: [
+                    ...state.items,
+                    {
+                        id: Date.now(),
+                        text: state.inputValue,
+                        completed: false
+                    }
+                ],
+                inputValue: "",
+                editingId: null
+            };
+        case "DELETE":
+            return {
+                ...state,
+                items: state.items.filter(item => item.id !== action.payload)
+            };
+        case "START_EDIT":
+            return {
+                ...state,
+                inputValue: action.payload.text,
+                editingId: action.payload.id
+            };
+        case "EDIT":
+            return {
+                ...state,
+                items: state.items.map(item => 
+                    item.id === state.editingId
+                    ? {...item, text: state.inputValue}
+                    : item
+                ),
+                inputValue: "",
+                editingId: null
+            }
+        case "TOGGLE":
+            return {
+                ...state,
+                items: state.items.map(item => 
+                    item.id === action.payload.id
+                    ? {...item, completed: action.payload.checked}
+                    : item
+                )
+            };
+        default:
+            return state;
+    }
+}
+
+// ---------------------- custom hook
+function useTodo(){
+    const context = useContext(ToDoContext);
+    if(!context) {
+        throw new Error ("useTodo must be used within TodoProvider");
+    }
+    return context;
+}
+
+//-------------------------- provider
+export function TodoProvider({ children } : {children: React.ReactNode}){
+    const [state, dispatch] = useReducer(todoReducer, initialState);
+
+    return (
+        <ToDoContext.Provider value={{ state, dispatch }}>
+            {children}
+        </ToDoContext.Provider>
+    );
+}
+
+//--------------------------- input
+export function ToDoInput(){
+    const {state, dispatch} = useTodo();
+    return (
+        <>
+            <input 
+                value={state.inputValue}
+                onChange={(e)=>
+                    dispatch({ type: "SET_INPUT", payload: e.target.value})
+                }
+            />
+            <button
+                onClick={()=>
+                    dispatch({ type: state.editingId ? "EDIT" : "ADD"})
+                }
+            >
+                {state.editingId ? "SAVE" : "ADD"}
+            </button>
+        </>
+    );
+}
+
+//-------------------- list
+export function ToDoList(){
+    const { state } = useTodo();
+
+    return (
+        <>
+            {state.items.map(item => (
+                <li key={item.id}>
+                    <ToDoItem item={item} />
+                </li>
+            ))}
+        </>
+    );
+}
 
 
-// function TodoInput({inputValue, inputChange, addBtn, editingId}: TodoInputProps){
-  
-//   return(
-//     <>
-//       <input value={inputValue} onChange={inputChange}/>
-//       <button onClick={addBtn}>
-//         {editingId !== null ? "SAVE" : "ADD"}
-//       </button>
-//     </>
-//   );
-// }
+//------------------ Item
+export function ToDoItem({item}:{item:IType}){
+    const { dispatch } = useTodo();
 
-// function TodoItem({item, toggleCompleted, deleteBtn, editBtn} :TodoItemProps){
-//   return(
-//     <>
-//       <input type="checkbox" checked={item.completed} onChange={() => toggleCompleted(item.id)} />
-//         <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>
-//           {item.text}
-//         </span>
-//       <button onClick={() => deleteBtn(item.id)}>delete</button>
-//       <button onClick={() => editBtn(item)}>edit</button>
-//     </>
-//   );
-// }
-
-
-// export default App;
-
-
-// // ---------------------------------------------
-// import { useState } from "react";
-
-// interface IType {
-//   id:number;
-//   text:string;
-//   completed:boolean;
-// }
-// function App(){
-//   const [inputValue, setInputValue] = useState("");
-//   const [items, setItems] = useState<IType[]>([]);
-//   const [editingId, setEditingId] = useState<number|null>(null);
-//   const [category, setCategory] = useState("all");
-//   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-//     setInputValue(e.target.value);
-//   }
-//   const addBtn = () => {
-//     if(!inputValue.trim()) return;
-//     if(editingId !== null){
-//       setItems((prev) => prev.map((item) => editingId === item.id ? {...item, text:inputValue} : item));
-//     } else {
-//       setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
-//     }
-//     setInputValue("");
-//     setEditingId(null);
-//   }
-//   const deleteBtn = (id:number) => {
-//     setItems((prev) => prev.filter((item) => item.id !== id) );
-//   }
-//   const editBtn = (item:IType) => {
-//     setInputValue(item.text);
-//     setEditingId(item.id);
-//   }
-//   const toggleInput = (id: number) => {
-//     setItems((prev) => prev.map((item) => id === item.id ? {...item, completed: !item.completed} : item));
-//   }
-//   const filtered = items.filter((item) => item.completed === true ? true : item.completed === false )
-//   return(
-//     <>
-//       <select onChange={(e) => setCategory(e.target.value)}>
-//         <option value="all">전체</option>
-//         <option value="completed">완료</option>
-//         <option value="uncompleted">미완료</option>
-//       </select>
-//       <input value={inputValue} onChange={inputChange}/>
-//       <button onClick={addBtn}>{editingId !== null ? "SAVE" : "ADD"}</button>
-//       {items.length === 0 ? (
-//         <span>할일없음</span>
-//       ) : (
-//         items.map((item) => 
-//           <li key={item.id}>
-//             <input type="checkbox" onChange={() => toggleInput(item.id)} checked={item.completed}/>
-//             <span style={{ textDecoration: item.completed  ? "line-through" : "none" }}>{item.text}</span>
-//             <button onClick={()=>deleteBtn(item.id)}>delete</button>
-//             <button onClick={()=>editBtn(item)}>edit</button>
-//           </li>
-//         ))
-//       }
-//     </>
-//   );
-// }
-
-// export default App;
+    return (
+        <>
+            <input 
+                type="checkbox"
+                checked={item.completed}
+                onChange={(e) =>
+                    dispatch({
+                        type: "TOGGLE",
+                        payload: {id: item.id, checked: e.target.checked}
+                    })
+                }
+            />
+            <span
+                style={{
+                    textDecoration: item.completed ? "line-through" : "none"
+                }}
+            >
+                {item.text}
+            </span>
+            <button
+                onClick={() => 
+                    dispatch({ type: "DELETE", payload: item.id})
+                }
+            >
+                delete
+            </button>
+            <button
+                onClick={() => 
+                    dispatch({
+                        type: "START_EDIT",
+                        payload: { id:item.id, text:item.text}
+                    })
+                }
+            >
+                edit
+            </button>
+        </>
+    )
+}
