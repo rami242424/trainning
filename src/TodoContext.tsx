@@ -27,9 +27,9 @@ interface ToDoContextType {
     toggleChange: (id: number, checked: boolean) => void;
     editingId: number | null;
     items: IType[];
-    inputValue: string;
-    inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
-    updatedItem: () => void;
+    // inputValue: string;
+    // inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
+    // updatedItem: () => void;
 }
 
 export const ToDoContext = createContext<ToDoContextType | null>(null);

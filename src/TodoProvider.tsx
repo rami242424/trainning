@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { ToDoContext } from './TodoContext';
 
 export interface IType {
     id: number;
@@ -6,27 +7,13 @@ export interface IType {
     completed: boolean;
 }
 
-interface IToDoInputType {
+interface IToDoInputProps {
     inputValue: string;
     inputChange: (e:React.ChangeEvent<HTMLInputElement>) => void;
-    updatedItem: () => void; 
-    editingId: number|null;
-    
+    updatedItem: () => void;     
 }
 
-interface IToDoListType {
-    toggleInput: (id:number, checked:boolean) => void;
-    deleteBtn: (id: number) => void;
-    editBtn : (text: string, id: number) => void;
-    items: IType[];
-}
 
-interface TodoItemProps {
-    toggleInput : (id:number, checked: boolean) => void;
-    deleteBtn : (id:number) => void;
-    editBtn : (text: string, id: number) => void;
-    item : IType;
-}
 
 function TodoProvider(){
     const [inputValue, setInputValue] = useState("");
@@ -52,35 +39,32 @@ function TodoProvider(){
     const deleteBtn = (id:number) => {
         setItems((prev) => prev.filter((item) => item.id !== id));
     }
-    const editBtn = (text:string, id:number) => {
+    const editBtn = (id:number, text:string) => {
         setInputValue(text);
         setEditingId(id);
     }
-    const toggleInput = (id:number, checked:boolean) => {
+    const toggleChange = (id:number, checked:boolean) => {
         setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
     }
     
     return(
-        <>
+        <ToDoContext.Provider value={{ toggleChange, deleteBtn, editBtn, items, editingId }}>
             <ToDoInput 
                 inputValue = {inputValue}
                 inputChange = {inputChange}
                 updatedItem = {updatedItem}
-                editingId = {editingId}
             />
-            <ToDoList 
-                toggleInput ={toggleInput}
-                deleteBtn ={deleteBtn}
-                editBtn ={editBtn}
-                items ={items}
-            />
-        </>
+            <ToDoList />
+        </ToDoContext.Provider>
     );
 }
 
 export default TodoProvider;
 
-export function ToDoInput({inputValue, inputChange, updatedItem, editingId}:IToDoInputType){
+export function ToDoInput({inputValue, inputChange, updatedItem} : IToDoInputProps){
+    const context = useContext(ToDoContext);
+    if(!context) return null;
+    const {editingId} = context;
     return(
         <>
             <input value={inputValue} onChange={inputChange}/>
@@ -89,16 +73,16 @@ export function ToDoInput({inputValue, inputChange, updatedItem, editingId}:IToD
     );
 }
 
-export function ToDoList({items, toggleInput, deleteBtn, editBtn}:IToDoListType){
+export function ToDoList(){
+    const context = useContext(ToDoContext);
+    if(!context) return null;
+    const {items} = context;
     return(
         <>
             {items.map((item) => (
                     <li key={item.id}>
-                        <ToDoItem 
-                            toggleInput = {toggleInput}
+                        <ToDoItem
                             item = {item}
-                            deleteBtn = {deleteBtn}
-                            editBtn = {editBtn}
                         />
                     </li>
                 )
@@ -107,13 +91,16 @@ export function ToDoList({items, toggleInput, deleteBtn, editBtn}:IToDoListType)
     );
 }
 
-export function ToDoItem({toggleInput, item, deleteBtn, editBtn}:TodoItemProps){
+export function ToDoItem({ item }:{ item: IType }){
+    const context = useContext(ToDoContext);
+    if(!context) return null;
+    const {toggleChange, deleteBtn, editBtn} = context;
     return(
         <>
-            <input type="checkbox" onChange={(e) => toggleInput(item.id, e.target.checked)} checked={item.completed}/>
+            <input type="checkbox" onChange={(e) => toggleChange(item.id, e.target.checked)} checked={item.completed}/>
             <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
             <button onClick={() => deleteBtn(item.id)}>delete</button>
-            <button onClick={() => editBtn(item.text, item.id)}>edit</button>
+            <button onClick={() => editBtn(item.id, item.text)}>edit</button>
         </>
     );
 }
