@@ -34,6 +34,9 @@ function TodoProvider(){
         setInputValue(item.text);
         setEditingId(item.id);
     }
+    const toggleInput = (id:number, checked:boolean) => {
+        setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
+    }
     
     return(
         <>
@@ -41,7 +44,8 @@ function TodoProvider(){
             <button onClick={updatedItem}>{editingId !== null ? "SAVE" : "ADD"}</button>
             {items.map((item) => 
                 <li>
-                    {item.text}
+                    <input type="checkbox" onChange={(e) => toggleInput(item.id, e.target.checked)} checked={item.completed}/>
+                    <span>{item.text}</span>
                     <button onClick={() => deleteBtn(item.id)}>delete</button>
                     <button onClick={() => editBtn(item)}>edit</button>
                 </li>
