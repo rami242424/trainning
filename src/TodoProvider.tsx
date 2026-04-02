@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useReducer } from "react";
 import { TodoContext } from './TodoContext';
 
 export interface IType {
@@ -79,15 +79,14 @@ function todoReducer(state:State, action:Action): State {
                     ? {...item, completed: action.payload.checked}
                     : item
                 )
-            }
+            };
+            default:
+                return state;
     }
-    return(
-
-    );
+    
 }
 
-
-
+// ---------------custom hook
 function useTodo(){
     const context = useContext(TodoContext);
     if(!context){
@@ -97,81 +96,39 @@ function useTodo(){
 }
 
 
-export function TodoProvider({ children } : ){
-    const [inputValue, setInputValue] = useState("");
-    const [items, setItems] = useState<IType[]>([]);
-    const [editingId, setEditingId] = useState<number|null>(null);
-    const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue(e.target.value)
-    }
-    const updatedItem = () => {
-        if(editingId !== null){
-            addBtn();
-        } else {
-            afterEdit();
-        }
-    }
-    const afterEdit = () => {
-        setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} :item));
-    }
-    const addBtn = () => {
-        setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
-        setInputValue("");
-    }
-    const deleteBtn = (id:number) => {
-        setItems((prev) => prev.filter((item) => item.id !== id));
-    }
-    const editBtn = (id:number, text:string) => {
-        setInputValue(text);
-        setEditingId(id);
-    }
-    const toggleChange = (id:number, checked:boolean) => {
-        setItems((prev) => prev.map((item) => item.id === id ? {...item, completed: checked} : item));
-    }
-    
-    return(
-        <TodoContext.Provider 
-            value={{ toggleChange, deleteBtn, editBtn, items, editingId, inputValue, inputChange, updatedItem }}>
+// --------------provider
+
+export function TodoProvider({ children } : {children:  React.ReactNode}){
+    const [state, dispatch] = useReducer(todoReducer, initialState);
+    return (
+        <TodoContext.Provider value={{ state, dispatch }}>
             {children}
         </TodoContext.Provider>
     );
 }
 
-
+//------------------------input
 export function ToDoInput(){
-    const {editingId, inputValue, inputChange, updatedItem } = useTodo();
+    const { state, dispatch } = useTodo();
     return(
         <>
-            <input value={inputValue} onChange={inputChange}/>
-            <button onClick={updatedItem}>{editingId !== null ? "SAVE" : "ADD"}</button>
+            <input value={state.inputValue} onChange={(e) => dispatch({ type: "SET_INPUT", payload: e.target.value})}/>
+            <button onClick={() => dispatch({ type: state.editingId ? "SAVE" : "ADD"})}>
+                {state.editingId ? "SAVE" : "ADD"}
+            </button>
         </>
     );
 }
 
-export function ToDoList(){
-    const {items} = useTodo();
-    return(
-        <>
-            {items.map((item) => (
-                    <li key={item.id}>
-                        <ToDoItem
-                            item = {item}
-                        />
-                    </li>
-                )
-            )}
-        </>
-    );
-}
 
 export function ToDoItem({ item }:{ item: IType }){
-    const {toggleChange, deleteBtn, editBtn} = useTodo();
+    const { dispatch } = useTodo();
     return(
         <>
-            <input type="checkbox" onChange={(e) => toggleChange(item.id, e.target.checked)} checked={item.completed}/>
+            <input type="checkbox" onChange={(e) => dispatch({ type: "TOGGLE", payload: {id: item.id, checked: e.target.checked}})} checked={item.completed}/>
             <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
-            <button onClick={() => deleteBtn(item.id)}>delete</button>
-            <button onClick={() => editBtn(item.id, item.text)}>edit</button>
+            <button onClick={() => dispatch({ type: "DELETE", payload: item.id})}>delete</button>
+            <button onClick={() => dispatch({ type: "START_EDIT",payload: {id: item.id, text:item.text}})}>edit</button>
         </>
     );
 }
