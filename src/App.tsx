@@ -1,10 +1,9 @@
-import { ToDoInput, ToDoList, TodoProvider} from "./TodoProvider";
+import { ToDoInput, TodoProvider} from "./TodoProvider";
 
 function App(){
   return (
     <TodoProvider>
       <ToDoInput />
-      <ToDoList />
     </TodoProvider>
   );
 }

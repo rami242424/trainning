@@ -7,14 +7,14 @@ export interface IType {
   completed: boolean;
 }
 
-//----------------state 타입
+//----------------state 타입 → 현재 상태 값의 구조 정의
 type State = {
     items: IType[];
     inputValue: string;
     editingId: number | null;
 }
 
-//--------------------action 타입
+//--------------------action → 타입 상태를 어떻게 바꿀지에 대한 명령
 type Action = 
     | { type: "SET_INPUT"; payload: string }
     | { type: "ADD" }

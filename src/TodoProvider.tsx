@@ -53,6 +53,7 @@ function todoReducer(state:State, action:Action): State {
                 editingId: action.payload.id
             };
         case "EDIT" :
+            if(state.editingId === null) return state;
             return {
                 ...state,
                 items : state.items.map((item) => 
@@ -113,7 +114,7 @@ export function ToDoInput(){
     return(
         <>
             <input value={state.inputValue} onChange={(e) => dispatch({ type: "SET_INPUT", payload: e.target.value})}/>
-            <button onClick={() => dispatch({ type: state.editingId ? "SAVE" : "ADD"})}>
+            <button onClick={() => dispatch({ type: state.editingId !== null ? "EDIT" : "ADD"})}>
                 {state.editingId ? "SAVE" : "ADD"}
             </button>
         </>
