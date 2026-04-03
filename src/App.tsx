@@ -1,11 +1,9 @@
-import { TodoProvider, ToDoInput, ToDoList } from "./TodoProvider";
-
-function App() {
-  return (
-    <TodoProvider>
-      <ToDoInput />
-      <ToDoList />
-    </TodoProvider>
+function App(){
+  return(
+    <>
+      <input/>
+      <button>Add</button>
+    </>
   );
 }
 
