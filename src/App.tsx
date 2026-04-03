@@ -25,18 +25,19 @@ function App(){
   }
   const addBtn = () => {
     setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
-    //setInputValue("");
   }
   const deleteBtn = (id:number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   }
   const editStart = () => {
     setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
-    //setInputValue("");
   }
   const readyToEditBtn = (id:number, text:string) => {
     setEditingId(id);
     setInputValue(text);
+  }
+  const toggleChange = (id:number, checked:boolean) => {
+    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed:checked} : item))
   }
   return(
     <>
@@ -44,7 +45,8 @@ function App(){
       <button onClick={updatedItems}>Add</button>
       {items.map((item) => 
         <li key={item.id}>
-          {item.text}
+          <input type="checkbox" checked={item.completed} onChange={(e) => toggleChange(item.id, e.target.checked)}/>
+          <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
           <button onClick={() => deleteBtn(item.id)}>delete</button>
           <button onClick={() => readyToEditBtn(item.id, item.text)}>edit</button>
         </li>
