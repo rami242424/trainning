@@ -12,8 +12,12 @@ type State = {
 }
 
 type Action = 
-  { type: "ADD"; payload: string };
+  | { type: "ADD"; payload: string }
+  | { type: "EDITSTART"; payload: number};
 
+// const editStart = () => {
+//     setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
+//   }
 
 const reducer = (state:State, action:Action): State => {
   switch(action.type){
@@ -29,6 +33,10 @@ const reducer = (state:State, action:Action): State => {
           }
         ]
       }
+      case EditStart :
+        return {
+
+        }
       default: return state;
   } 
 }
@@ -59,7 +67,7 @@ function App(){
   }
   const editStart = () => {
     setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
-
+  }
   // // 기존
   // const addBtn = () => {
   //   setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
@@ -76,7 +84,7 @@ function App(){
   // }
   // const toggleChange = (id:number, checked:boolean) => {
   //   setItems((prev) => prev.map((item) => item.id === id ? {...item, completed:checked} : item))
-  }
+  // }
   return(
     <>
       <input value={inputValue} onChange={inputChange}/>
