@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 
 interface IType {
   id: number;
@@ -6,9 +6,38 @@ interface IType {
   completed: boolean;
 }
 
+// ADD
+type State = {
+  items:IType[]
+}
+
+type Action = 
+  { type: "ADD"; payload: string };
+
+
+const reducer = (state:State, action:Action): State => {
+  switch(action.type){
+    case "ADD" :
+      return {
+        ...state,
+        items: [
+          ...state.items,
+          {
+            id: Date.now(),
+            text: action.payload,
+            completed: false
+          }
+        ]
+      }
+      default: return state;
+  } 
+}
+
 function App(){
+  const [state, dispatch] =useReducer(reducer, { items: []});
+  
   const [inputValue, setInputValue] = useState("");
-  const [items, setItems] = useState<IType[]>([]);
+  //const [items, setItems] = useState<IType[]>([]);
   const [editingId, setEditingId] = useState<number|null>(null);
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -23,8 +52,12 @@ function App(){
     setInputValue("");
     setEditingId(null);
   }
+  // // 기존
+  // const addBtn = () => {
+  //   setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
+  // }
   const addBtn = () => {
-    setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
+    dispatch({ type: "ADD", payload: inputValue});
   }
   const deleteBtn = (id:number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
@@ -43,7 +76,7 @@ function App(){
     <>
       <input value={inputValue} onChange={inputChange}/>
       <button onClick={updatedItems}>Add</button>
-      {items.map((item) => 
+      {state.items.map((item) => 
         <li key={item.id}>
           <input type="checkbox" checked={item.completed} onChange={(e) => toggleChange(item.id, e.target.checked)}/>
           <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
