@@ -13,11 +13,10 @@ type State = {
 
 type Action = 
   | { type: "ADD"; payload: string }
-  | { type: "EDITSTART"; payload: number};
+  | { type: "EDIT"; payload: {id: number, text:string}};
 
-// const editStart = () => {
-//     setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
-//   }
+
+
 
 const reducer = (state:State, action:Action): State => {
   switch(action.type){
@@ -33,13 +32,15 @@ const reducer = (state:State, action:Action): State => {
           }
         ]
       }
-      case EditStart :
+      case "EDIT" :
         return {
-
+          ...state,
+          items: state.items.map((item) => item.id === action.payload.id  ? { ...item, text: action.payload.text} : item)
         }
       default: return state;
   } 
 }
+
 
 function App(){
   const [state, dispatch] =useReducer(reducer, { items: []});
@@ -65,19 +66,17 @@ function App(){
     setInputValue("");
     setEditingId(null);
   }
-  const editStart = () => {
-    setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
-  }
-  // // 기존
+
+  //  기존
   // const addBtn = () => {
   //   setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
   // }
   // const deleteBtn = (id:number) => {
   //   setItems((prev) => prev.filter((item) => item.id !== id));
   // }
-  // const editStart = () => {
-  //   setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
-  // }
+  const editStart = () => {
+    setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
+  }
   // const readyToEditBtn = (id:number, text:string) => {
   //   setEditingId(id);
   //   setInputValue(text);
