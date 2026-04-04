@@ -39,6 +39,11 @@ function App(){
   const [inputValue, setInputValue] = useState("");
   //const [items, setItems] = useState<IType[]>([]);
   const [editingId, setEditingId] = useState<number|null>(null);
+
+  // ----------------
+  const addBtn = () => {
+    dispatch({ type: "ADD", payload: inputValue});
+  }
   const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   }
@@ -52,25 +57,25 @@ function App(){
     setInputValue("");
     setEditingId(null);
   }
+  const editStart = () => {
+    setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
+
   // // 기존
   // const addBtn = () => {
   //   setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
   // }
-  const addBtn = () => {
-    dispatch({ type: "ADD", payload: inputValue});
-  }
-  const deleteBtn = (id:number) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
-  }
-  const editStart = () => {
-    setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
-  }
-  const readyToEditBtn = (id:number, text:string) => {
-    setEditingId(id);
-    setInputValue(text);
-  }
-  const toggleChange = (id:number, checked:boolean) => {
-    setItems((prev) => prev.map((item) => item.id === id ? {...item, completed:checked} : item))
+  // const deleteBtn = (id:number) => {
+  //   setItems((prev) => prev.filter((item) => item.id !== id));
+  // }
+  // const editStart = () => {
+  //   setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
+  // }
+  // const readyToEditBtn = (id:number, text:string) => {
+  //   setEditingId(id);
+  //   setInputValue(text);
+  // }
+  // const toggleChange = (id:number, checked:boolean) => {
+  //   setItems((prev) => prev.map((item) => item.id === id ? {...item, completed:checked} : item))
   }
   return(
     <>
