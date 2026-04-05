@@ -6,94 +6,49 @@ interface IType {
   completed: boolean;
 }
 
-// ADD
+// 값이 변함, ui에 직접영향을 줌, 다음렌더에서도 기억해야하는 것
 type State = {
-  items:IType[]
-}
+  inputValue : string;
+  editingId : number | null;
+  items : IType[];
+} 
 
 type Action = 
-  | { type: "ADD"; payload: string }
-  | { type: "EDIT"; payload: {id: number, text:string}};
+  | { type: "SET_INPUT"; payload: string}
+  | { type: "ADD" }
+  | { type: "EDIT"; payload: number}
+  | { type: "DELETE"; payload: number}
+  | { type: "TOGGLE"; payload: {id: number, checked: boolean}}
 
 
-
-
-const reducer = (state:State, action:Action): State => {
-  switch(action.type){
-    case "ADD" :
-      return {
-        ...state,
-        items: [
-          ...state.items,
-          {
-            id: Date.now(),
-            text: action.payload,
-            completed: false
-          }
-        ]
-      }
-      case "EDIT" :
-        return {
-          ...state,
-          items: state.items.map((item) => item.id === action.payload.id  ? { ...item, text: action.payload.text} : item)
-        }
-      default: return state;
-  } 
+function reducer(state:State, action:Action): State {
+  switch(action.type) {
+    default:
+      return state;
+  }
 }
 
-
 function App(){
-  const [state, dispatch] =useReducer(reducer, { items: []});
-  
+  const [state, dispatch] = useReducer(reducer, initialState);
+
   const [inputValue, setInputValue] = useState("");
-  //const [items, setItems] = useState<IType[]>([]);
   const [editingId, setEditingId] = useState<number|null>(null);
+  const [items, setItems] = useState<IType[]>([]);
 
-  // ----------------
-  const addBtn = () => {
-    dispatch({ type: "ADD", payload: inputValue});
-  }
-  const inputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
-  }
-  const updatedItems = () => {
-    if(!inputValue.trim()) return;
-    if(editingId !== null){
-      editStart();
-    } else {
-      addBtn();
-    }
-    setInputValue("");
-    setEditingId(null);
-  }
-
-  //  기존
-  // const addBtn = () => {
-  //   setItems((prev) => [...prev, {id:Date.now(), text:inputValue, completed:false}]);
-  // }
-  // const deleteBtn = (id:number) => {
-  //   setItems((prev) => prev.filter((item) => item.id !== id));
-  // }
-  const editStart = () => {
-    setItems((prev) => prev.map((item) => item.id === editingId ? {...item, text:inputValue} : item));
-  }
-  // const readyToEditBtn = (id:number, text:string) => {
-  //   setEditingId(id);
-  //   setInputValue(text);
-  // }
-  // const toggleChange = (id:number, checked:boolean) => {
-  //   setItems((prev) => prev.map((item) => item.id === id ? {...item, completed:checked} : item))
-  // }
-  return(
+  return (
     <>
-      <input value={inputValue} onChange={inputChange}/>
-      <button onClick={updatedItems}>Add</button>
-      {state.items.map((item) => 
+      <input 
+        value={state.inputValue} 
+        onChange={(e) => dispatch({ type: "SET_INPUT", payload: e.target.value })}
+      />
+      <button onClick={() => dispatch({ type: "ADD" })}>
+        Add
+      </button>
+      {items.map((item) => 
         <li key={item.id}>
-          <input type="checkbox" checked={item.completed} onChange={(e) => toggleChange(item.id, e.target.checked)}/>
-          <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>{item.text}</span>
-          <button onClick={() => deleteBtn(item.id)}>delete</button>
-          <button onClick={() => readyToEditBtn(item.id, item.text)}>edit</button>
+          {item.text}
+          <button onClick={() => dispatch({ type: "DELETE", payload: item.id })}>Delete</button>
+          <button>Edit</button>
         </li>
       )}
     </>
