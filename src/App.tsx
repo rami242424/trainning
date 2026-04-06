@@ -1,4 +1,4 @@
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 
 interface IType {
   id: number;
@@ -16,7 +16,7 @@ type State = {
 type Action = 
   | { type: "SET_INPUT"; payload: string}
   | { type: "ADD" }
-  | { type: "EDIT"; payload: number}
+  | { type: "EDIT"}
   | { type: "DELETE"; payload: number}
   | { type: "TOGGLE"; payload: number}
   | { type: "SET_EDIT"; payload: {id: number, text: string }}
@@ -77,12 +77,14 @@ function reducer(state:State, action:Action): State {
   }
 }
 
+const initialState : State = {
+  inputValue: "",
+  editingId: null,
+  items: []
+}
+
 function App(){
   const [state, dispatch] = useReducer(reducer, initialState);
-
-  const [inputValue, setInputValue] = useState("");
-  const [editingId, setEditingId] = useState<number|null>(null);
-  const [items, setItems] = useState<IType[]>([]);
 
   return (
     <>
@@ -91,19 +93,19 @@ function App(){
         onChange={(e) => dispatch({ type: "SET_INPUT", payload: e.target.value })}
       />
       <button onClick={() => {
-        if(state.editingId) {
-          dispatch({ type: "EDIT", payload: state.editingId})
+        if(state.editingId !== null) {
+          dispatch({ type: "EDIT" })
         } else {
           dispatch({ type: "ADD"});
         }
       }}
       >
-        {state.editingId ? "Update" : "Add"}
+        {state.editingId !== null ? "Update" : "Add"}
       </button>
-      {items.map((item) => 
+      {state.items.map((item) => 
         <li key={item.id}>
-          <input type="checkbox" onChange={(e) => dispatch({ type: "TOGGLE", payload: item.id})}/>
-          <span style={{ textDecoration: editingId !== null ? "line-through" : "none"}}>
+          <input type="checkbox" checked={item.completed} onChange={() => dispatch({ type: "TOGGLE", payload: item.id})}/>
+          <span style={{ textDecoration: item.completed ? "line-through" : "none"}}>
             {item.text}
           </span>
           <button onClick={() => dispatch({ type: "DELETE", payload: item.id })}>Delete</button>
