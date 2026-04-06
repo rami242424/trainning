@@ -54,6 +54,15 @@ function reducer(state:State, action:Action): State {
             editingId: action.payload.id
           }
           case "EDIT":
+            return {
+              ...state,
+              items: 
+              
+                state.items.map((item) => item.id === state.editingId ? {...item, text:state.inputValue}: item)
+              ,
+              inputValue: "",
+              editingId: null
+            }
           case "TOGGLE":
             return {
               ...state,
@@ -81,8 +90,15 @@ function App(){
         value={state.inputValue} 
         onChange={(e) => dispatch({ type: "SET_INPUT", payload: e.target.value })}
       />
-      <button onClick={() => dispatch({ type: "ADD" })}>
-        Add
+      <button onClick={() => {
+        if(state.editingId) {
+          dispatch({ type: "EDIT", payload: state.editingId})
+        } else {
+          dispatch({ type: "ADD"});
+        }
+      }}
+      >
+        {state.editingId ? "Update" : "Add"}
       </button>
       {items.map((item) => 
         <li key={item.id}>
