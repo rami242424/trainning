@@ -28,6 +28,7 @@ function reducer (state: State, action: Action) : State {
         inputValue: action.payload
       }
     case "ADD":
+      if(!state.inputValue.trim()) return state;
       return {
         ...state,
         items: [
@@ -42,12 +43,15 @@ function reducer (state: State, action: Action) : State {
         editingId: null
       }
       case "EDIT":
+        if(!state.inputValue.trim()) return state;
         return {
           ...state,
           items: state.items.map((item) => item.id === state.editingId 
             ? {...item, text: action.payload}
             : item
-          )
+          ),
+          inputValue: "",
+          editingId: null,
         }
       case "TOGGLE":
         return {
@@ -60,13 +64,13 @@ function reducer (state: State, action: Action) : State {
       case "DELETE":
         return {
           ...state,
-          items: state.items.filter((item) => item.id !== state.editingId)
+          items: state.items.filter((item) => item.id !== action.payload)
         }
       case "SET_EDIT":
         return {
           ...state,
-          inputValue: state.inputValue,
-          editingId: state.editingId
+          inputValue: action.payload.text,
+          editingId: action.payload.id
         }
     default : 
     return state;
@@ -90,7 +94,6 @@ function App() {
       />
       <button 
         onClick={() => {
-            if(!state.inputValue.trim()) return;
             if(state.editingId !== null){
               dispatch({ type: "EDIT", payload: state.inputValue})
             } else {
