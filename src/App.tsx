@@ -18,7 +18,7 @@ type Action =
   | { type: "ADD" }
   | { type: "EDIT"; payload: number}
   | { type: "DELETE"; payload: number}
-  | { type: "TOGGLE"; payload: {id: number, checked: boolean}}
+  | { type: "TOGGLE"; payload: number}
   | { type: "SET_EDIT"; payload: {id: number, text: string }}
 
 
@@ -55,6 +55,14 @@ function reducer(state:State, action:Action): State {
           }
           case "EDIT":
           case "TOGGLE":
+            return {
+              ...state,
+              items: state.items.map((item) => 
+                item.id === action.payload 
+                  ? {...item, completed: !item.completed} 
+                  : item
+              )
+            }
     default:
       return state;
   }
@@ -78,7 +86,7 @@ function App(){
       </button>
       {items.map((item) => 
         <li key={item.id}>
-          <input type="checkbox" onChange={(e) => dispatch({ type: "TOGGLE", payload: {id: item.id, checked: item.completed}})}/>
+          <input type="checkbox" onChange={(e) => dispatch({ type: "TOGGLE", payload: item.id})}/>
           <span style={{ textDecoration: editingId !== null ? "line-through" : "none"}}>
             {item.text}
           </span>
