@@ -18,16 +18,16 @@ type Action =
 
 function reducer (state: State, action: Action) : State {
   switch(action.type){
-    
+
     default : 
     return state;
   }
 }
 
-type initialState = {
-  inputValue: "";
-  items: [];
-  editingId: null;
+const initialState: State = {
+  inputValue: "",
+  items: [],
+  editingId: null,
 }
 
 function App () {
