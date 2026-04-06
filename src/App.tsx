@@ -107,7 +107,7 @@ function App() {
             type="checkbox" 
             checked={item.completed} 
             onChange={() => dispatch({ type: "TOGGLE", payload: item.id })}/>
-          <span style={{ textDecoration: state.editingId !== null ? "line-through" : "none" }}>
+          <span style={{ textDecoration: item.completed ? "line-through" : "none" }}>
             {item.text}
           </span>
           <button onClick={() => dispatch({ type: "DELETE", payload: item.id})}>delete</button>
