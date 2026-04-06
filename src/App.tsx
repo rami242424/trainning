@@ -18,7 +18,7 @@ type Action =
   | { type: "TOGGLE"; payload: number }
   | { type: "DELETE"; payload: number }
   | { type: "SET_EDIT"; payload: {id: number, text: string}}
-  | { type: "EDIT"; payload: number }
+  | { type: "EDIT"; payload: string }
 
 function reducer (state: State, action: Action) : State {
   switch(action.type){
@@ -39,7 +39,16 @@ function reducer (state: State, action: Action) : State {
           }
         ],
         inputValue: "",
+        editingId: null
       }
+      case "EDIT":
+        return {
+          ...state,
+          items: state.items.map((item) => item.id === state.editingId 
+            ? {...item, text: action.payload}
+            : item
+          )
+        }
       case "TOGGLE":
         return {
           ...state,
@@ -74,8 +83,24 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   return(
     <>
-      <input value={state.inputValue} onChange={(e) => dispatch({ type: "SET_INPUT", payload: e.target.value})}/>
-      <button onClick={() => dispatch({ type: "ADD" })}>Add</button>
+      <input 
+        value={state.inputValue} 
+        onChange={(e) => 
+          dispatch({ type: "SET_INPUT", payload: e.target.value})}
+      />
+      <button 
+        onClick={() => {
+            if(!state.inputValue.trim()) return;
+            if(state.editingId !== null){
+              dispatch({ type: "EDIT", payload: state.inputValue})
+            } else {
+              dispatch({ type: "ADD"})
+            }
+          }
+        }
+        >
+        { state.editingId !== null ? "UPDATED" : "ADD"}
+      </button>
       {state.items.map((item) => 
         <li key={item.id}>
           <input 
